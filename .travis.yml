@@ -1,5 +1,8 @@
-language: java
-jdk:
+--- 
+before_script: 
+  - "./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
+jdk: 
   - openjdk11
-
-./mvnw spring-boot:run
+language: java
+script: 
+  - "./mvnw spring-boot:run"
