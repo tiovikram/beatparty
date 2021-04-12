@@ -5,4 +5,5 @@ jdk:
   - openjdk11
 language: java
 script: 
-  - "./mvnw spring-boot:run"
+  - "mvn compile"
+  - "mvn test"
