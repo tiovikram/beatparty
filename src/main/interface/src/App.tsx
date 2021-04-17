@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import "./App.css";
+import TitleAndButtons from "./TitleAndButtons";
 import Song from './Song';
 
 interface AppState{
@@ -18,9 +19,10 @@ class App extends Component<{}, AppState>{
 
     render(){
         return(
-        <div>
-        <p> Testing Render here</p>
-        </div>
+            <div>
+            <TitleAndButtons/>
+            <p> Testing Render here</p>
+            </div>
         );
     }
 }
