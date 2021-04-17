@@ -9,11 +9,17 @@ interface AppState{
 class App extends Component<{}, AppState>{
 
     //create constructor here
+    constructor(props: any){
+        super(props);
+        this.state = {
+            songList: [],
+        }
+    }
 
     render(){
         return(
         <div>
-        <p> Testing Render </p>
+        <p> Testing Render here</p>
         </div>
         );
     }
