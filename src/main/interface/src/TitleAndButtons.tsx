@@ -12,14 +12,14 @@ class TitleAndButtons extends Component<{}, {}>{
     uploadSong = () =>{
         alert("Uploading");
     }
-    //create constructor here
+
     render(){
         return(
             <>
-            <h1>
+            <h1 style={{ marginLeft: '40.5rem' }} >
             BeatParty!
             </h1>
-            <div>
+            <div style = {{ marginLeft: '36.5rem'}}>
                 <button onClick={this.getShuffledSongs}>Shuffle</button>
                 <button onClick={this.getTopSongs}>See Top Songs</button>
                 <button onClick={this.uploadSong}>Upload a Song</button>
