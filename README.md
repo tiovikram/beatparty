@@ -11,6 +11,7 @@ A CSE 403: Software Engineering (2021 Spring) group project
 2. [Project Structure](#project-structure)  
   2.1 [Source Code](#source-code)  
   2.2 [Build and Run instructions](#build-and-run-instructions)  
+  2.3 [Database Resources](#database-resources)  
 3. [Version Control Guidelines](#version-control-guidelines)  
   3.1 [Cloning](#cloning)  
   3.2 [Committing](#committing)  
@@ -62,12 +63,13 @@ Run the SpringBoot application using the mvnw launcher:
   
 Run the React and Typescript application:  
 `npm start`  
-
-This project uses an Azure SQL database to store information for each song.
-  Azure account: beatpartdev@hotmail.com (Contact rohinmeduri for password)
-  Resource group: Backend
-  Server name: beat-party-server.database.windows.net
-  Database name: BeatPartyDB
+  
+#### Database resources
+This project uses an Azure SQL database to store information for each song.  
+  Azure account: beatpartdev@hotmail.com (Contact rohinmeduri for password)  
+  Resource group: Backend  
+  Server name: beat-party-server.database.windows.net  
+  Database name: BeatPartyDB  
   
 ### Version Control Guidelines
 ---
