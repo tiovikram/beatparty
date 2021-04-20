@@ -4,17 +4,17 @@ A CSE 403: Software Engineering (2021 Spring) group project
   
 ### Table of Contents:
 ---
-1. [Ideas And Goals](#ideas-and-goals)
-  1.1 [Idea](#idea)
-  1.2 [Goals](#goals)
-  1.3 [Stretch Goals](#stretch-goals)
-2. [Project Structure](#project-structure)
-  2.1 [Source Code](#source-code)
-  2.2 [Build and Run instructions](#build-and-run-instructions)
-3. [Version Control Guidelines](#version-control-guidelines)
-  3.1 [Cloning](#cloning)
-  3.2 [Committing](#committing)
-  3.3 [Pushing](#pushing)
+1. [Ideas And Goals](#ideas-and-goals)  
+  1.1 [Idea](#idea)  
+  1.2 [Goals](#goals)  
+  1.3 [Stretch Goals](#stretch-goals)  
+2. [Project Structure](#project-structure)  
+  2.1 [Source Code](#source-code)  
+  2.2 [Build and Run instructions](#build-and-run-instructions)  
+3. [Version Control Guidelines](#version-control-guidelines)  
+  3.1 [Cloning](#cloning)  
+  3.2 [Committing](#committing)  
+  3.3 [Pushing](#pushing)  
   
 ### Ideas and Goals
 ---
@@ -38,30 +38,30 @@ The stretch goals for the application features are as follows.
 ---
 #### Source Code
 **master:**  
-Back-end Java Functionality: `/src/main/java/com/beatparty/`
-Spring Boot Application main point: `src/main/java/com/beatparty/beatpartyapp`
-JUnit test suite: `src/test/java/com/beatparty/beatpartyapp`
-Maven dependency file: `/pom.xml`
-Documentation: `/README.md`
-CI/CD build scripts: `/.travis.yml`
-
-**homepage-modules:** (merge to master upon completion) 
-Front-end React and Typescript Functionality: `src/main/interface/src/` 
+Back-end Java Functionality: `/src/main/java/com/beatparty/`  
+Spring Boot Application main point: `src/main/java/com/beatparty/beatpartyapp`  
+JUnit test suite: `src/test/java/com/beatparty/beatpartyapp`  
+Maven dependency file: `/pom.xml`  
+Documentation: `/README.md`  
+CI/CD build scripts: `/.travis.yml`  
+  
+**homepage-modules:** (merge to master upon completion)  
+Front-end React and Typescript Functionality: `src/main/interface/src/`  
 Front-end documentation: `/src/main/interface/README.md`  
   
 #### Build and Run instructions
 Build the SpringBoot project using Maven:  
-`mvn compile`
+`mvn compile`  
   
-Run the JUnit test suite:
-`mvn compile
-mvn test`
-
-Run the SpringBoot application using the mvnw launcher:
-`./mvnw spring-boot:run`
-
-Run the React and Typescript application:
-`npm start`
+Run the JUnit test suite:  
+`mvn compile  
+mvn test`  
+  
+Run the SpringBoot application using the mvnw launcher:  
+`./mvnw spring-boot:run`  
+  
+Run the React and Typescript application:  
+`npm start`  
   
 ### Version Control Guidelines
 ---
@@ -73,14 +73,18 @@ SSH: `git@github.com:v-subbiah/beatparty.git`
 #### Committing
 Please commit all local changes to a branch. If you are currently do not have a branch you are working, please create a new branch as follows.  
 Creating a new branch: `git branch <branch_name>`  
+  
 To make changes and/or commit on this branch, please checkout the branch as follows.  
 Checking out a branch: `git checkout <branch_name>`  
+  
 ⚠️ **Warning:** git will not allow you to checkout a branch if you have existing changes you have not stashed or commit on your current branch.  
   
 #### Pushing
 The repository will not allow you to push changes to your branch unless you set an upstream remote branch as follows.  
 Setting an upstream branch: `git push --set-upstream https://github.com/v-subbiah/beatparty.git HEAD:<branch_name>`  
+  
 If there is no such upstream branch on remote yet, set the upstream branch with the intended branch name and GitHub will create the respective branch for you.  
+  
 Once you have set the upstream branch on remote, you may continue to push changes using the following.  
 Pushing changes to an existing branch on remote: `git push`  
   
