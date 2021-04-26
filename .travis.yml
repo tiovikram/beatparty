@@ -7,4 +7,4 @@ language: java
 script: 
   - "mvn compile"
   - "mvn test"
-  - "./checkstyle-script.sh"
+  - "bash checkstyle-script.sh"
