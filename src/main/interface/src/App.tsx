@@ -35,11 +35,19 @@ class App extends Component<{}, AppState>{
         window.location.href = "https://www.google.com";
     }
 
+    upvote = () => {
+        alert("Voted");
+    }
 
     render() {
         const final = [];
         for (let currentSong of this.state.songList) {
-          final.push(<button><⬆️⬆️<a href = {currentSong.getLink()}><li key={currentSong.getName()}>{currentSong.getName() + " by " + currentSong.getArtist()}</li></a>);
+          final.push(
+                    <div>
+                    <a href = {currentSong.getLink()}>
+                    <li key={currentSong.getName()}>{currentSong.getName() + " by " + currentSong.getArtist()}</li></a>
+                    </div>
+                    );
         }
         return (
           <div className="App">
