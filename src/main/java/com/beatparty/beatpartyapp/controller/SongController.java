@@ -38,8 +38,8 @@ public class SongController {
      * @param songLink - The link where the song is hosted
      * @return "Upload successful"
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/uploadNewSong/{Song}")
-    public String uploadSong(@PathVariable Song name, @PathVariable String artistName,
+    @RequestMapping(method = RequestMethod.GET, value = "/uploadNewSong/{name}/{artistName}/{songLink})")
+    public String uploadSong(@PathVariable String name, @PathVariable String artistName,
                              @PathVariable String uploadDate, @PathVariable String songLink) {
         Song toAdd = new Song(name, artistName, new Date(), songLink);
         if (!uploadedSongs.contains(toAdd)) {
