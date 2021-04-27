@@ -1,3 +1,5 @@
+package com.beatparty.beatpartyapp;
+
 import java.util.*;
 
 public class Song {
@@ -8,13 +10,15 @@ public class Song {
     private final Date uploadDate;
     private final String songLink;
 
-    public Song(String name,String artistName, String songLink) {
+    public Song(String name, String artistName,  Date uploadDate, String songLink) {
         this.name = name;
         this.artistName = artistName;
         this.votes = 0;
-        this.uploadDate = new Date();
+        this.uploadDate = uploadDate;
         this.songLink = songLink;
     }
+
+    //TODO: DEFINE EQUALS AND HASHCODE METHODS
 
     public String getSongName() {
         return name;
@@ -53,7 +57,7 @@ public class Song {
     private class Artist {
         private String firstName;
         private String lastName;
-        private Set<Song> songs;
+        private Set<com.beatparty.beatpartyapp.Song> songs;
 
         private Artist(String firstName, String lastName) {
             this.firstName = firstName;
