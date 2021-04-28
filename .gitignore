@@ -1,3 +1,4 @@
 .DS_Store
 .idea/*
+beatpartyapp.iml
 ./src/main/interface/node_modules/.

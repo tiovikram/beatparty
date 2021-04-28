@@ -1,5 +1,12 @@
-import java.util.*;
+import java.util.Date;
 
+/**
+ * This class serves a model of abstraction for the data needed for the BeatParty platform.
+ * Each instance of the Song class acts as a song uploaded to the platform. Each Song contains
+ * information on the song's name, the artist's name, how many votes the song has, the date and
+ * time the song was uploaded, and a link to the song a third-party streaming service
+ * (Spotify, Soundcloud, etc.).
+ */
 public class Song {
 
     private final String name;
@@ -8,7 +15,14 @@ public class Song {
     private final Date uploadDate;
     private final String songLink;
 
-    public Song(String name,String artistName, String songLink) {
+    /**
+     * Creates a song with the given name by the given artist. A link to the song is also required
+     *
+     * @param name the name of the song
+     * @param artistName the name of the artist
+     * @param songLink a link to the song on a third-party streaming service
+     */
+    public Song(String name, String artistName, String songLink) {
         this.name = name;
         this.artistName = artistName;
         this.votes = 0;
