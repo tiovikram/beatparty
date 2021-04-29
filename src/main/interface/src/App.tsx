@@ -25,7 +25,7 @@ class App extends Component<{}, AppState>{
     getSongList = () => {
         var song1 = new Song ('Bohemian Rhapsody', 'Queen', 5, 'https://open.spotify.com/album/7C2DKB8C12LqxMkfJRwTo9?highlight=spotify:track:6l8GvAyoUZwWDgF1e4822w');
         //song.getName(); //for testing only
-        var song2 = new Song ('Thriller', 'Michael Jackson', 4, 'link here');
+        var song2 = new Song ('Billie Jean', 'Michael Jackson', 4, 'https://open.spotify.com/album/1C2h7mLntPSeVYciMRTF4a?highlight=spotify:track:5ChkMS8OtdzJeqyybCc9R5');
         this.setState({
             songList: [...this.state.songList, song1, song2]
         });
@@ -35,8 +35,8 @@ class App extends Component<{}, AppState>{
         window.location.href = "https://www.google.com";
     }
 
-    upvote = () => {
-        alert("Voted");
+    upvote = (currentSong: Song) => {
+        alert(currentSong.getName());
     }
 
     render() {
@@ -46,13 +46,16 @@ class App extends Component<{}, AppState>{
                     <div>
                     <a href = {currentSong.getLink()}>
                     <li key={currentSong.getName()}>{currentSong.getName() + " by " + currentSong.getArtist()}</li></a>
+                    <button type="button" id={currentSong.getName()} onClick={() => this.upvote(currentSong)}>Click to Vote</button>
                     </div>
                     );
         }
         return (
-          <div className="App">
+          <div className="App" >
             <TitleAndButtons/>
-            <ol>{final}</ol>
+            <ol style = {{ marginLeft: '36.5rem'}}>
+            {final}
+            </ol>
           </div>
         );
       }
