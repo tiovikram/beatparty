@@ -85,7 +85,7 @@ public class SongControllerUnitTest {
        ResponseEntity<String> response = (ResponseEntity<String>) restTemplate.getForEntity("http://localhost:" + port + "/uploadNewSong/" +
                                          testName + "/" + testArtist + "/" + testUrl, String.class);
 
-       Assert.assertEquals(200, response.getStatusCodeValue());
+       Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
        Assert.assertEquals("Upload successful", response.getBody());
     }
 
@@ -95,8 +95,11 @@ public class SongControllerUnitTest {
     @Test
     public void testDeleteAllSongs() throws JsonProcessingException {
 	ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port + "/deleteAllSongs", String.class);
-        Assert.assertEquals(200, response.getStatusCodeValue());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
         response = restTemplate.getForEntity("http://localhost:" + port + "/getSongs/" +  1, String.class);
-        Assert.assertEquals(400, response.getStatusCodeValue());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Set<SongResponse> songs = objectMapper.readValue(response.getBody(), new TypeReference<Set<SongResponse>>(){ });
+        Assert.assertEquals(0, songs.size());
+
     } 
 }
