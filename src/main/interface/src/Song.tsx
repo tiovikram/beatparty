@@ -4,6 +4,7 @@ class Song{
     artistName: string;
     numVotes: number;
     link: string;
+
     //create constructor here
 
     constructor(nameOfSong: string, nameOfArtist: string, votes: number, linkToSong: string){
