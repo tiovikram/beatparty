@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import "./Song.css"
+
 interface SongState {
     isVoted: boolean;
     upvotes: number;
@@ -46,25 +48,29 @@ class Song extends Component<SongProps, SongState> {
         }
         
         return (
-        <div>
-            <button className="upvote-button"
-                    style={buttonGray}
-                    onClick={() => this.upvote(this.state.isVoted, this.state.upvotes)}>
-                <span role="img" aria-label="thumbs-up">👍</span>
-            </button>
-            <div className="upvote-counter">
-                <p>{this.state.upvotes}</p>
+        <div className="song-container">
+            <div className="upvote-section">
+                <button className="upvote-button"
+                        style={buttonGray}
+                        onClick={() => this.upvote(this.state.isVoted, this.state.upvotes)}>
+                    <span role="img" aria-label="thumbs-up">👍</span>
+                </button>
+                <div className="upvote-counter">
+                    {this.state.upvotes}
+                </div>
             </div>
             <a href={this.props.url}>
                 <div className="song-info">
                     <div className="song-name">
-                        <p>{this.props.name}</p>
+                        {this.props.name}
                     </div>
-                    <div className="artist">
-                        <p>{this.props.artist}</p>
-                    </div>
-                    <div className="date">
-                        <p>{this.props.date}</p>
+                    <div className="song-metadata">
+                        <div className="artist">
+                            {this.props.artist}
+                        </div>
+                        <div className="date">
+                            {this.props.date}
+                        </div>
                     </div>
                 </div>
             </a>
