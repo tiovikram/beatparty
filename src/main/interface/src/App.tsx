@@ -23,7 +23,7 @@ class App extends Component<{}, AppState>{
         return (
           <div className="App" >
               <TitleAndButtons/>
-                <ol style = {{ marginLeft: '36.5rem'}}>
+                <ol style = {{}}>
                     <Song artist={"Scorpions"}
                             date={new Date().toString()}
                             name={"Blackout"}
