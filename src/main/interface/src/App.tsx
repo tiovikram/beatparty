@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import "./App.css";
+
 import TitleAndButtons from "./TitleAndButtons";
 import Song from './Song';
+
+import "./App.css";
 
 interface AppState{
     songList: Song[];
@@ -15,63 +17,28 @@ class App extends Component<{}, AppState>{
         this.state = {
             songList: [],
         }
-        //this.getSongList();
-    }
-
-    componentDidMount = () => {
-        this.getSongList();
-    }
-
-    getSongList = () => {
-        var song1 = new Song ('Bohemian Rhapsody', 'Queen', 5, 'https://open.spotify.com/album/7C2DKB8C12LqxMkfJRwTo9?highlight=spotify:track:6l8GvAyoUZwWDgF1e4822w');
-        //song.getName(); //for testing only
-        var song2 = new Song ('Billie Jean', 'Michael Jackson', 4, 'https://open.spotify.com/album/1C2h7mLntPSeVYciMRTF4a?highlight=spotify:track:5ChkMS8OtdzJeqyybCc9R5');
-        this.setState({
-            songList: [...this.state.songList, song1, song2]
-        });
-    }
-
-    goToGithub = () => {
-        window.location.href = "https://www.google.com";
-    }
-
-    upvote = (currentSong: Song) => {
-        alert(currentSong.getName());
     }
 
     render() {
-        const final = [];
-        for (let currentSong of this.state.songList) {
-          final.push(
-                    <div>
-                    <a href = {currentSong.getLink()}>
-                    <li key={currentSong.getName()}>{currentSong.getName() + " by " + currentSong.getArtist()}</li></a>
-                    <button type="button" id={currentSong.getName()} onClick={() => this.upvote(currentSong)}>Click to Vote</button>
-                    </div>
-                    );
-        }
         return (
           <div className="App" >
-            <TitleAndButtons/>
-            <ol style = {{ marginLeft: '36.5rem'}}>
-            {final}
-            </ol>
+              <TitleAndButtons/>
+                <ol style = {{ marginLeft: '36.5rem'}}>
+                    <Song artist={"Scorpions"}
+                            date={new Date().toString()}
+                            name={"Blackout"}
+                            upvotes={0}
+                            url={"https://open.spotify.com/track/15RpfmFhrE5RRkf4vZ6kZu?si=153e8b2d8d8341d7"}
+                    />
+                    <Song artist={"DJ Snake"}
+                            date={new Date().toString()}
+                            name={"Try Me (with Plastic Toy)"}
+                            upvotes={0}
+                            url={"https://open.spotify.com/track/5vTtANNlQK5UhwfooDek5y?si=eb537289f7f84d74"}
+                    />
+                </ol>
           </div>
         );
-      }
-
-    /*
-    render(){
-        return(
-            <>
-            <div>
-            <TitleAndButtons/>
-            <p> Testing Render here</p>
-            <button onClick={this.goToGithub}>Click to go to Github</button>
-            </div>
-            </>
-        );
     }
-    */
 }
 export default App;
