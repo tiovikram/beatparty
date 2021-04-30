@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+
 class TitleAndButtons extends Component<{}, {}>{
 
     getShuffledSongs = () =>{
@@ -29,4 +30,5 @@ class TitleAndButtons extends Component<{}, {}>{
     }
 
 }
+
 export default TitleAndButtons;
