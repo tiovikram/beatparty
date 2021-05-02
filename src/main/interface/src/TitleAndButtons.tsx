@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 interface TitleAndButtonsProps{
     uploadButtonPressed: boolean;
-    onChange(clicked: boolean): void;
+    uploadButtonClicked(clicked: boolean): void;
 }
 
 class TitleAndButtons extends Component<TitleAndButtonsProps, {}>{
@@ -17,7 +17,7 @@ class TitleAndButtons extends Component<TitleAndButtonsProps, {}>{
 
     uploadSong = () =>{
         alert("Uploading");
-        this.props.onChange(true);
+        this.props.uploadButtonClicked(true);
     }
 
     render(){
