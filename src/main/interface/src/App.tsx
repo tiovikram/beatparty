@@ -7,6 +7,7 @@ import "./App.css";
 
 interface AppState{
     songList: Song[];
+    uploadButtonPressed: boolean;
 }
 
 class App extends Component<{}, AppState>{
@@ -16,13 +17,18 @@ class App extends Component<{}, AppState>{
         super(props);
         this.state = {
             songList: [],
+            uploadButtonPressed: false,
         }
+    }
+
+    displayPopUp(clicked: boolean){
+        alert("pop up here");
     }
 
     render() {
         return (
           <div className="App" >
-              <TitleAndButtons/>
+              <TitleAndButtons uploadButtonPressed={this.state.uploadButtonPressed} onChange={this.displayPopUp}/>
                 <ol style = {{}}>
                     <Song artist={"Scorpions"}
                             date={new Date().toString()}
