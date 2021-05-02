@@ -28,7 +28,7 @@ class App extends Component<{}, AppState>{
     render() {
         return (
           <div className="App" >
-              <TitleAndButtons uploadButtonPressed={this.state.uploadButtonPressed} onChange={this.displayPopUp}/>
+              <TitleAndButtons uploadButtonPressed={this.state.uploadButtonPressed} uploadButtonClicked={this.displayPopUp}/>
                 <ol style = {{}}>
                     <Song artist={"Scorpions"}
                             date={new Date().toString()}
