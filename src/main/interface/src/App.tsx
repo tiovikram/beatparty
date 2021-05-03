@@ -35,17 +35,23 @@ class App extends Component<{}, AppState>{
     }
 
     uploadSong = () =>{
-        alert("Uploading");
+        //alert("Uploading");
         //this.props.uploadButtonClicked(true);
         this.setState({
             uploadButtonPressed: true,
         })
     }
 
+    notUploadingAnymore = () =>{
+        this.setState({
+            uploadButtonPressed: false,
+        });
+    }
+
     render() {
         if (this.state.uploadButtonPressed){
             return(
-                <InputFormUploadSong/>
+                <InputFormUploadSong onChange={this.notUploadingAnymore}/>
             );
         }
         else{
