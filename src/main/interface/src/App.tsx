@@ -28,10 +28,12 @@ class App extends Component<{}, AppState>{
 
     getShuffledSongs = () =>{
         alert("Shuffled");
+        //retrieve list of songs unsorted
     }
 
     getTopSongs = () =>{
         alert("Top");
+        //sort list of songs
     }
 
     uploadSong = () =>{
