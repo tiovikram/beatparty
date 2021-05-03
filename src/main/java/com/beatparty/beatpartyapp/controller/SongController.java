@@ -43,15 +43,25 @@ public class SongController {
     }
 
     /**
-     * APi to up-vote or down-vote a particular song.
+     * API to up-vote or down-vote a particular song.
      *
      * @param id - the id of the song to perform the vote on
      * @param vote - A boolean where True represents and up-vote and False represents a down-vote
-     * @return "Vote successful"
+     * @return "Vote successful" when vote is successful, "Vote unsuccessful" otherwise
      */
     @RequestMapping(method = RequestMethod.POST, value = "/vote/{id}/{vote}")
     public String vote(@PathVariable int id, @PathVariable boolean vote) {
-        return "Vote successful";
+        try {
+            Song s = songDao.getOne(id);
+            if (vote) {
+                s.upvote();
+            } else {
+                s.downvote();
+            }
+            return "Vote successful";
+        } catch (Exception e) {
+            return "Vote unsuccessful";
+        }
     }
 
     /**
@@ -60,8 +70,9 @@ public class SongController {
      * @param id - the id of the song to delete
      * @return "Song deleted"
      */
-    @RequestMapping(method = RequestMethod.DELETE, value = "/deleteSong/id")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/deleteSong/{id}")
     public String deleteSong(@PathVariable int id) {
+        songDao.deleteById(id);
         return "Song deleted";
     }
 
@@ -72,6 +83,7 @@ public class SongController {
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/deleteAllSongs")
     public String deleteAllSongs() {
+        songDao.deleteAllInBatch();
         return "All songs deleted";
     }
 }
