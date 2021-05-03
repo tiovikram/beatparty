@@ -22,6 +22,11 @@ class App extends Component<{}, AppState>{
         }
     }
 
+    //function to get new data from Back-End
+    componentDidMount(){
+        //populate songList with data from Back-End.
+    }
+
     displayPopUp(clicked: boolean){
         alert("pop up here");
     }
