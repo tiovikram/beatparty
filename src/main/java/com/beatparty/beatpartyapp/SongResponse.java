@@ -20,6 +20,7 @@ import java.util.Date;
 @Data
 public class SongResponse {
 
+    private final String id;
     private final String artist;
     private final String date;
     private final String name;
@@ -30,11 +31,13 @@ public class SongResponse {
      * Constructor for JsonCreator object deserialization
      */
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public SongResponse(@JsonProperty("artistName") String artist,
+    public SongResponse(@JsonProperty("id") String id,
+			@JsonProperty("artistName") String artist,
                         @JsonProperty("uploadDate") String date,
                         @JsonProperty("songName") String name,
                         @JsonProperty("votes") Integer upvotes,
                         @JsonProperty("songLink") String url) {
+	this.id = id;
         this.artist = artist;
         this.date = date;
         this.name = name;
