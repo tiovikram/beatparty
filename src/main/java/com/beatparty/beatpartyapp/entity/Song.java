@@ -51,34 +51,70 @@ public class Song {
         this.songLink = songLink;
     }
 
+    /**
+     * Returns the ID of this Song.
+     *
+     * @return this Song's ID
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Returns the name of this Song.
+     *
+     * @return this Song's name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the name of this Song's artist.
+     *
+     * @return this Song's artist
+     */
     public String getArtistName() {
         return artistName;
     }
 
+    /**
+     * Returns the link to this Song.
+     *
+     * @return this Song's link
+     */
     public String getSongLink() {
         return songLink;
     }
 
+    /**
+     * Returns the number of votes this song has.
+     *
+     * @return how many votes this Song has
+     */
     public int getVotes() {
         return votes;
     }
 
+    /**
+     * Returns this Song's upload date.
+     *
+     * @return this Song's upload date
+     */
     public Date getUploadDate() {
         return uploadDate;
     }
 
+    /**
+     * Upvotes this song.
+     */
     public void upvote() {
         votes++;
     }
 
+    /**
+     * Downvotes this song.
+     */
     public void downvote() {
         votes--;
     }
