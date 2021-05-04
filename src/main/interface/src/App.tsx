@@ -7,7 +7,10 @@ import InputFormUploadSong from "./InputFormUploadSong";
 import "./App.css";
 
 interface AppState{
-    songList: Song[];
+    //songList: Song[];
+
+    songList: [];
+
     uploadButtonPressed: boolean;
 }
 
@@ -25,7 +28,27 @@ class App extends Component<{}, AppState>{
     //function to get new data from Back-End
     componentDidMount(){
         //populate songList with data from Back-End.
+        this.getSongData();
     }
+
+    getSongData = async () => {
+        let extendPath = 'http://localhost:8080/getSongs/20';
+        try {
+            let response = await fetch(extendPath);
+            if (!response.ok) {
+                alert("Could not receive building data");
+                return;
+            }
+            let allSongs = await response.json();
+            this.setState({
+                songList: allSongs,
+            })
+
+        } catch (e) {
+            alert("There was an error contacting the server.");
+            console.log(e);
+        }
+    };
 
     displayPopUp(clicked: boolean){
         alert("pop up here");
