@@ -7,7 +7,7 @@
 package com.beatparty.beatpartyapp;
 
 import com.beatparty.beatpartyapp.controller.SongController;
-import com.beatparty.beatpartyapp.Song;
+import com.beatparty.beatpartyapp.entity.Song;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
