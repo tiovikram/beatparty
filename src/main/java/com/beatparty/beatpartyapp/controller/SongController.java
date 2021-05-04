@@ -58,14 +58,18 @@ public class SongController {
     public String vote(@PathVariable int id, @PathVariable boolean vote) {
         try {
             Song s = songDao.getOne(id);
+            String response;
             if (vote) {
                 s.upvote();
+                response = "Upvote successful";
             } else {
                 s.downvote();
+                response = "Downvote successful";
             }
-            return "Vote successful";
+            songDao.saveAndFlush(s);
+            return response;
         } catch (Exception e) {
-            return "Vote unsuccessful";
+            return "Vote unsuccessful: invalid id given";
         }
     }
 
