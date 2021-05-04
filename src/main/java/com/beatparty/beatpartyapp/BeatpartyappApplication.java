@@ -4,11 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Initial target for the SpringBoot Application launcher
+ * This class runs the SpringBoard application that builds the BeatParty platform.
  */
 @SpringBootApplication
 public class BeatpartyappApplication {
-
+  
 	/**
 	 * Application main method
 	 *

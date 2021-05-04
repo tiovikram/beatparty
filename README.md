@@ -16,6 +16,8 @@ A CSE 403: Software Engineering (2021 Spring) group project
   3.1 [Cloning](#cloning)  
   3.2 [Committing](#committing)  
   3.3 [Pushing](#pushing)  
+4. [Linting](#linting)
+  4.1 [Running Checkstyle](#running-checkstyle)  
   
 ### Ideas and Goals
 ---
@@ -63,6 +65,9 @@ Run the SpringBoot application using the mvnw launcher:
   
 Run the React and Typescript application:  
 `npm start`  
+  
+Run the checkstyle linter:  
+`java -jar jars/checkstyle-8.42-all.jar -c src/test/checkstyle/google_checks.xml src/main/java/`  
   
 #### Database resources
 This project uses an Azure SQL database to store information for each song.  

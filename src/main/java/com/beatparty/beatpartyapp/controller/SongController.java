@@ -1,100 +1,89 @@
 package com.beatparty.beatpartyapp.controller;
 
-import com.beatparty.beatpartyapp.Song;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.beatparty.beatpartyapp.dao.SongDao;
+import com.beatparty.beatpartyapp.entity.Song;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
- * SongController maps http endpoints to their corresponding backend API calls
+ * SongController maps http endpoints to their corresponding backend API calls.
  */
 @RestController
 public class SongController {
-    // list of all songs in application (for local testing purposes without database integration)
-    Set<Song> uploadedSongs = new HashSet<>();
+
+    @Autowired
+    SongDao songDao;
 
     /**
-     * API to fetch the top 'count' number of songs
+     * API to fetch the top 'count' number of songs.
      *
      * @param count - The number of songs to fetch
-     * @return list of songs, in descending order by number of votes
+     * @return list of songs in descending order by number of votes
      */
     @RequestMapping(method = RequestMethod.GET, value = "/getSongs/{count}")
-    public Set<Song> getSongs(@PathVariable int count) {
-        if (uploadedSongs.isEmpty()) {
-            uploadTestSongs();
-        }
-        return uploadedSongs;
+    public List<Song> getSongs(@PathVariable int count) {
+        return songDao.getSongs(count);
     }
 
     /**
-     * API to upload a new song
+     * API to upload a new song.
      *
-     * @param name - The name of the song
-     * @param artistName - The artist who created the song
-     * @param uploadDate - The time the song was uploaded
-     * @param songLink - The link where the song is hosted
+     * @param song - the song to upload
      * @return "Upload successful"
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/uploadNewSong/{name}/{artistName}/{songLink})")
-    public String uploadSong(@PathVariable String name, @PathVariable String artistName,
-                             @PathVariable String uploadDate, @PathVariable String songLink) {
-        Song toAdd = new Song(name, artistName, new Date(), songLink);
-        if (!uploadedSongs.contains(toAdd)) {
-            uploadedSongs.add(toAdd);
-        }
+    @RequestMapping(method = RequestMethod.POST, value = "/uploadNewSong")
+    public String uploadSong(@RequestBody Song song) {
+        songDao.save(song);
         return "Upload successful";
     }
 
     /**
-     * APi to up-vote or down-vote a particular song
+     * API to up-vote or down-vote a particular song.
      *
-     * @param name - The name of the song
-     * @param artistName - The artist who created the song
+     * @param id - the id of the song to perform the vote on
      * @param vote - A boolean where True represents and up-vote and False represents a down-vote
-     * @return "Vote successful"
+     * @return "Vote successful" when vote is successful, "Vote unsuccessful" otherwise
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/vote/{name}/{artistName}/{vote}")
-    public String vote(@PathVariable String name, @PathVariable String artistName, @PathVariable boolean vote) {
-        return "Vote successful";
+    @RequestMapping(method = RequestMethod.POST, value = "/vote/{id}/{vote}")
+    public String vote(@PathVariable int id, @PathVariable boolean vote) {
+        try {
+            Song s = songDao.getOne(id);
+            if (vote) {
+                s.upvote();
+            } else {
+                s.downvote();
+            }
+            return "Vote successful";
+        } catch (Exception e) {
+            return "Vote unsuccessful";
+        }
     }
 
     /**
-     * API to delete a song
+     * API to delete a song.
      *
-     * @param name - The name of the song
-     * @param artistName - The artist who created the song
+     * @param id - the id of the song to delete
      * @return "Song deleted"
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/deleteSong/{name}/{artistName}")
-    public String deleteSong(@PathVariable String name, @PathVariable String artistName) {
+    @RequestMapping(method = RequestMethod.DELETE, value = "/deleteSong/{id}")
+    public String deleteSong(@PathVariable int id) {
+        songDao.deleteById(id);
         return "Song deleted";
     }
 
     /**
-     * API to clear all songs in the database
+     * API to clear all songs in the database.
      *
      * @return "Songs deleted"
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/deleteAllSongs")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/deleteAllSongs")
     public String deleteAllSongs() {
-        uploadedSongs.clear();
-        return "Songs deleted";
-    }
-
-    // Populates local "database" with dummy songs
-    private void uploadTestSongs() {
-        Song a = new Song("song1", "artist1", new Date(), "www.song1.com");
-        Song b = new Song("song2", "artist2", new Date(), "www.song2.com");
-        Song c = new Song("song3", "artist3", new Date(), "www.song3.com");
-        Song d = new Song("song4", "artist4", new Date(), "www.song4.com");
-        Song e = new Song("song5", "artist5", new Date(), "www.song5.com");
-        uploadedSongs.add(a);
-        uploadedSongs.add(b);
-        uploadedSongs.add(c);
-        uploadedSongs.add(d);
-        uploadedSongs.add(e);
+        songDao.deleteAllInBatch();
+        return "All songs deleted";
     }
 }
