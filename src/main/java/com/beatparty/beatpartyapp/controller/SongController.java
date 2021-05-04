@@ -30,6 +30,11 @@ public class SongController {
         return songDao.getSongs(count);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/getShuffledSongs/{count}")
+    public List<Song> getShuffledSongs(@PathVariable int count) {
+        return songDao.getShuffledSongs(count);
+    }
+
     /**
      * API to upload a new song.
      *
