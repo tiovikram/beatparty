@@ -8,12 +8,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
+import lombok.Data;
 
 /**
  * Song is a POJO representing a song on the BeatParty platform.
  */
 @Entity
+@Data
 @Table(name = "Songs")
 public class Song {
 
