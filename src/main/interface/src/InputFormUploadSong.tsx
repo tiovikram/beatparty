@@ -11,8 +11,12 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, {}>{
     }
 
     submitSong = () =>{
-        alert("Top");
+        alert("Submitted");
     }
+
+    //single input form - song link only
+    //validate button - fetch song data from spotify directly
+    //store data from spotify and send to back-end using stringify
 
     render(){
         return (
@@ -24,6 +28,10 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, {}>{
               type="text"
             />
             <p>Enter artist name:</p>
+            <input
+              type="text"
+            />
+            <p>Enter song URL:</p>
             <input
               type="text"
             />
