@@ -32,7 +32,8 @@ class App extends Component<{}, AppState>{
     }
 
     getSongData = async () => {
-        let extendPath = 'http://localhost:8080/getSongs/20';
+       // /*
+        let extendPath = 'http://localhost:8080/getSongs/2';
         try {
             let response = await fetch(extendPath);
             if (!response.ok) {
@@ -48,15 +49,17 @@ class App extends Component<{}, AppState>{
             alert("There was an error contacting the server.");
             console.log(e);
         }
+        //*/
     };
 
     displayPopUp(clicked: boolean){
         alert("pop up here");
     }
 
-    getShuffledSongs = () =>{
+    getShuffledSongs = async () =>{
         //alert("Shuffled");
-        let extendPath = 'http://localhost:8080/getShuffledSongs/20';
+        ///*
+        let extendPath = 'http://localhost:8080/getShuffledSongs/2';
         try {
             let response = await fetch(extendPath);
             if (!response.ok) {
@@ -72,9 +75,10 @@ class App extends Component<{}, AppState>{
             alert("There was an error contacting the server.");
             console.log(e);
         }
+        //*/
     }
 
-    getTopSongs = () =>{
+    getTopSongs = async () =>{
         //alert("Top");
         let extendPath = 'http://localhost:8080/getSongs/20';
         try {
