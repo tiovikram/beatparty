@@ -36,7 +36,7 @@ class App extends Component<{}, AppState>{
         try {
             let response = await fetch(extendPath);
             if (!response.ok) {
-                alert("Could not receive building data");
+                alert("Could not receive song data");
                 return;
             }
             let allSongs = await response.json();
@@ -55,13 +55,43 @@ class App extends Component<{}, AppState>{
     }
 
     getShuffledSongs = () =>{
-        alert("Shuffled");
-        //retrieve list of songs unsorted
+        //alert("Shuffled");
+        let extendPath = 'http://localhost:8080/getShuffledSongs/20';
+        try {
+            let response = await fetch(extendPath);
+            if (!response.ok) {
+                alert("Could not receive song data");
+                return;
+            }
+            let allSongs = await response.json();
+            this.setState({
+                songList: allSongs,
+            })
+
+        } catch (e) {
+            alert("There was an error contacting the server.");
+            console.log(e);
+        }
     }
 
     getTopSongs = () =>{
-        alert("Top");
-        //sort list of songs
+        //alert("Top");
+        let extendPath = 'http://localhost:8080/getSongs/20';
+        try {
+            let response = await fetch(extendPath);
+            if (!response.ok) {
+                alert("Could not receive song data");
+                return;
+            }
+            let allSongs = await response.json();
+            this.setState({
+                songList: allSongs,
+            })
+
+        } catch (e) {
+            alert("There was an error contacting the server.");
+            console.log(e);
+        }
     }
 
     uploadSong = () =>{
