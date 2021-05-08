@@ -44,7 +44,7 @@ class App extends Component<{}, AppState>{
             this.setState({
                 songList: allSongs,
             })
-
+            console.log(this.state.songList);
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
@@ -70,7 +70,7 @@ class App extends Component<{}, AppState>{
             this.setState({
                 songList: allSongs,
             })
-
+            console.log(this.state.songList);
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
@@ -91,7 +91,7 @@ class App extends Component<{}, AppState>{
             this.setState({
                 songList: allSongs,
             })
-
+            console.log(this.state.songList);
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
@@ -119,6 +119,18 @@ class App extends Component<{}, AppState>{
             );
         }
         else{
+            const songsToRender = [];
+            for (const currentSong of this.state.songList){
+                songsToRender.push(<Song   id={currentSong['id']}
+                                           artist={currentSong['artistName']}
+                                           date={currentSong['uploadDate']}
+                                           name={currentSong['name']}
+                                           upvotes={currentSong['votes']}
+                                           url={currentSong['songLink']}
+                                   />);
+
+            }
+            console.log(songsToRender);
             return (
               <div className="App" >
                   <h1 style={{ marginLeft: '40.5rem' }} >
@@ -130,18 +142,13 @@ class App extends Component<{}, AppState>{
                       <button onClick={this.uploadSong}>Upload a Song</button>
                   </div>
                     <ol style = {{}}>
-                        <Song artist={"Scorpions"}
-                                date={new Date().toString()}
-                                name={"Blackout"}
-                                upvotes={0}
-                                url={"https://open.spotify.com/track/15RpfmFhrE5RRkf4vZ6kZu?si=153e8b2d8d8341d7"}
-                        />
-                        <Song artist={"DJ Snake"}
-                                date={new Date().toString()}
-                                name={"Try Me (with Plastic Toy)"}
-                                upvotes={0}
-                                url={"https://open.spotify.com/track/5vTtANNlQK5UhwfooDek5y?si=eb537289f7f84d74"}
-                        />
+
+                    {songsToRender.map(song => (
+                        <li className="song-list">
+                          {song}
+                        </li>
+                      ))}
+
                     </ol>
               </div>
             );

@@ -9,6 +9,7 @@ interface SongState {
 
 // TODO: Add props for isVoted, imageUrl
 interface SongProps {
+    id: number;
     artist: string;
     date: string;
     name: string;
@@ -33,11 +34,31 @@ class Song extends Component<SongProps, SongState> {
                 isVoted: true,
                 upvotes: upvotes + 1
             });
+            try{
+                var requestToUpvote = new XMLHttpRequest();
+                requestToUpvote.open("POST", 'http://localhost:8080/vote/' + (this.props.id).toString() + '/' + (true).toString(), true);
+                requestToUpvote.setRequestHeader('Content-Type', 'application/json');
+                requestToUpvote.send();
+            }
+            catch (e){
+                alert("There was an error contacting the server.");
+                console.log(e);
+            }
         } else {
             this.setState({
                 isVoted: false,
                 upvotes: upvotes - 1
             })
+            try{
+                var requestToDownvote = new XMLHttpRequest();
+                requestToDownvote.open("POST", 'http://localhost:8080/vote/' + (this.props.id).toString() + '/' + (false).toString(), true);
+                requestToDownvote.setRequestHeader('Content-Type', 'application/json');
+                requestToDownvote.send();
+            }
+            catch (e){
+                alert("There was an error contacting the server.");
+                console.log(e);
+            }
         }
     }
 
