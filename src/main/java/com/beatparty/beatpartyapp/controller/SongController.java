@@ -45,6 +45,7 @@ public class SongController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/uploadNewSong")
     public String uploadSong(@RequestBody Song song) {
+        System.out.println(song); /////
         songDao.save(song);
         return "Upload successful";
     }

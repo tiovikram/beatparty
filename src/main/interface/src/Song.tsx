@@ -26,6 +26,7 @@ class Song extends Component<SongProps, SongState> {
             isVoted: false,
             upvotes: this.props.upvotes
         };
+        console.log(this.state.upvotes);
     }
 
     upvote = (isVoted: boolean, upvotes: number) => {
@@ -67,7 +68,10 @@ class Song extends Component<SongProps, SongState> {
         if (!this.state.isVoted) {
            buttonGray = {filter: "grayscale(100%)"}
         }
-        
+
+        console.log(this.props.id);
+        console.log(this.props.artist);
+        console.log(this.props.upvotes);
         return (
         <div className="song-container">
             <div className="upvote-section">
@@ -80,7 +84,7 @@ class Song extends Component<SongProps, SongState> {
                     {this.state.upvotes}
                 </div>
             </div>
-            <a href={this.props.url}>
+            <a href={this.props.artist}>
                 <div className="song-info">
                     <div className="song-name">
                         {this.props.name}

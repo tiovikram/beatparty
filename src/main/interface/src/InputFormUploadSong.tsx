@@ -45,8 +45,9 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, InputFormU
 
     submitSong = () =>{
         //alert(this.state.newSongName + " " + this.state.newArtistName + " " + this.state.newURL);
-        var newSongObj = { artistName: this.state.newArtistName, date: new Date().toString(), songName: this.state.newSongName, upvotes: 0, url: this.state.newURL };
+        var newSongObj = { artistName: this.state.newArtistName, name: this.state.newSongName, songLink: this.state.newURL };
         var myJSON = JSON.stringify(newSongObj);
+        console.log(myJSON);
         try{
             var xhr = new XMLHttpRequest();
             xhr.open("POST", 'http://localhost:8080/uploadNewSong', true);
@@ -57,6 +58,7 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, InputFormU
             alert("There was an error contacting the server.");
             console.log(e);
         }
+        alert("New Song Upload! You can now continue browsing music!");
     }
     //single input form song link only
     //validate button - fetch song data from spotify directly
@@ -64,7 +66,7 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, InputFormU
 
     render(){
         return (
-          <div style = {{ marginLeft: '36.5rem'}}>
+          <div style = {{ marginLeft: '38.5rem'}}>
           <form>
             <h1>Upload A Song</h1>
             <p>Enter song name:</p>
@@ -74,7 +76,6 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, InputFormU
             <p>Enter song URL:</p>
             <input type="text" onChange={this.updateURL}/>
           </form>
-          <button style = {{ marginLeft: '-3.5rem'}} onClick={this.backToHomePage}>Return to Home Page</button>
           <button onClick={this.submitSong}>Submit Song Selection</button>
           </div>
         );

@@ -11,6 +11,7 @@ interface AppState{
 
     songList: [];
 
+
     uploadButtonPressed: boolean;
 }
 
@@ -23,13 +24,16 @@ class App extends Component<{}, AppState>{
             songList: [],
             uploadButtonPressed: false,
         }
+        this.getSongData();
     }
 
     //function to get new data from Back-End
+    /*
     componentDidMount(){
         //populate songList with data from Back-End.
         this.getSongData();
     }
+    */
 
     getSongData = async () => {
        // /*
@@ -41,10 +45,12 @@ class App extends Component<{}, AppState>{
                 return;
             }
             let allSongs = await response.json();
+            console.log(allSongs);
             this.setState({
                 songList: allSongs,
+                uploadButtonPressed: false,
             })
-            console.log(this.state.songList);
+            //console.log(this.state.songList);
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
@@ -66,11 +72,17 @@ class App extends Component<{}, AppState>{
                 alert("Could not receive song data");
                 return;
             }
-            let allSongs = await response.json();
+            let shuffleSongs = await response.json();
+            console.log(shuffleSongs);
             this.setState({
-                songList: allSongs,
+                songList: [],
+                uploadButtonPressed: false,
             })
-            console.log(this.state.songList);
+            this.setState({
+                songList: shuffleSongs,
+                uploadButtonPressed: false,
+            })
+            //console.log(this.state.songList);
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
@@ -87,9 +99,14 @@ class App extends Component<{}, AppState>{
                 alert("Could not receive song data");
                 return;
             }
-            let allSongs = await response.json();
+            let topSongs = await response.json();
             this.setState({
-                songList: allSongs,
+                songList: [],
+                uploadButtonPressed: false,
+            })
+            this.setState({
+                songList: topSongs,
+                uploadButtonPressed: false,
             })
             console.log(this.state.songList);
         } catch (e) {
@@ -115,7 +132,17 @@ class App extends Component<{}, AppState>{
     render() {
         if (this.state.uploadButtonPressed){
             return(
+                <div>
+                <h1 style={{ marginLeft: '40.5rem' }} >
+                  BeatParty!
+                  </h1>
+                  <div style = {{ marginLeft: '36.5rem'}}>
+                      <button onClick={this.getShuffledSongs}>Shuffle</button>
+                      <button onClick={this.getTopSongs}>See Top Songs</button>
+                      <button onClick={this.uploadSong}>Upload a Song</button>
+                  </div>
                 <InputFormUploadSong onChange={this.notUploadingAnymore}/>
+                </div>
             );
         }
         else{
@@ -130,7 +157,7 @@ class App extends Component<{}, AppState>{
                                    />);
 
             }
-            console.log(songsToRender);
+            console.log("Songs to Render:" + songsToRender);
             return (
               <div className="App" >
                   <h1 style={{ marginLeft: '40.5rem' }} >
