@@ -9,6 +9,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BeatpartyappApplication {
 
+    /**
+     * Application main method.
+     *
+     * @param args - default parameters for main method
+     */
     public static void main(String[] args) {
         SpringApplication.run(BeatpartyappApplication.class, args);
     }

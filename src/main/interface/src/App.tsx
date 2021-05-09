@@ -1,10 +1,18 @@
 import React, {Component} from 'react';
-import "./App.css";
-import TitleAndButtons from "./TitleAndButtons";
+
+//import TitleAndButtons from "./TitleAndButtons";
 import Song from './Song';
+import InputFormUploadSong from "./InputFormUploadSong";
+
+import "./App.css";
 
 interface AppState{
-    songList: Song[];
+    //songList: Song[];
+
+    songList: [];
+
+
+    uploadButtonPressed: boolean;
 }
 
 class App extends Component<{}, AppState>{
@@ -14,64 +22,164 @@ class App extends Component<{}, AppState>{
         super(props);
         this.state = {
             songList: [],
+            uploadButtonPressed: false,
         }
-        //this.getSongList();
+        this.getSongData();
     }
 
-    componentDidMount = () => {
-        this.getSongList();
+    //function to get new data from Back-End
+    /*
+    componentDidMount(){
+        //populate songList with data from Back-End.
+        this.getSongData();
+    }
+    */
+
+    getSongData = async () => {
+       // /*
+        let extendPath = 'http://localhost:8080/getSongs/2';
+        try {
+            let response = await fetch(extendPath);
+            if (!response.ok) {
+                alert("Could not receive song data");
+                return;
+            }
+            let allSongs = await response.json();
+            console.log(allSongs);
+            this.setState({
+                songList: allSongs,
+                uploadButtonPressed: false,
+            })
+            //console.log(this.state.songList);
+        } catch (e) {
+            alert("There was an error contacting the server.");
+            console.log(e);
+        }
+        //*/
+    };
+
+    displayPopUp(clicked: boolean){
+        alert("pop up here");
     }
 
-    getSongList = () => {
-        var song1 = new Song ('Bohemian Rhapsody', 'Queen', 5, 'https://open.spotify.com/album/7C2DKB8C12LqxMkfJRwTo9?highlight=spotify:track:6l8GvAyoUZwWDgF1e4822w');
-        //song.getName(); //for testing only
-        var song2 = new Song ('Billie Jean', 'Michael Jackson', 4, 'https://open.spotify.com/album/1C2h7mLntPSeVYciMRTF4a?highlight=spotify:track:5ChkMS8OtdzJeqyybCc9R5');
+    getShuffledSongs = async () =>{
+        //alert("Shuffled");
+        ///*
+        let extendPath = 'http://localhost:8080/getShuffledSongs/2';
+        try {
+            let response = await fetch(extendPath);
+            if (!response.ok) {
+                alert("Could not receive song data");
+                return;
+            }
+            let shuffleSongs = await response.json();
+            console.log(shuffleSongs);
+            this.setState({
+                songList: [],
+                uploadButtonPressed: false,
+            })
+            this.setState({
+                songList: shuffleSongs,
+                uploadButtonPressed: false,
+            })
+            //console.log(this.state.songList);
+        } catch (e) {
+            alert("There was an error contacting the server.");
+            console.log(e);
+        }
+        //*/
+    }
+
+    getTopSongs = async () =>{
+        //alert("Top");
+        let extendPath = 'http://localhost:8080/getSongs/20';
+        try {
+            let response = await fetch(extendPath);
+            if (!response.ok) {
+                alert("Could not receive song data");
+                return;
+            }
+            let topSongs = await response.json();
+            this.setState({
+                songList: [],
+                uploadButtonPressed: false,
+            })
+            this.setState({
+                songList: topSongs,
+                uploadButtonPressed: false,
+            })
+            console.log(this.state.songList);
+        } catch (e) {
+            alert("There was an error contacting the server.");
+            console.log(e);
+        }
+    }
+
+    uploadSong = () =>{
+        //alert("Uploading");
+        //this.props.uploadButtonClicked(true);
         this.setState({
-            songList: [...this.state.songList, song1, song2]
+            uploadButtonPressed: true,
+        })
+    }
+
+    notUploadingAnymore = () =>{
+        this.setState({
+            uploadButtonPressed: false,
         });
     }
 
-    goToGithub = () => {
-        window.location.href = "https://www.google.com";
-    }
-
-    upvote = (currentSong: Song) => {
-        alert(currentSong.getName());
-    }
-
     render() {
-        const final = [];
-        for (let currentSong of this.state.songList) {
-          final.push(
-                    <div>
-                    <a href = {currentSong.getLink()}>
-                    <li key={currentSong.getName()}>{currentSong.getName() + " by " + currentSong.getArtist()}</li></a>
-                    <button type="button" id={currentSong.getName()} onClick={() => this.upvote(currentSong)}>Click to Vote</button>
-                    </div>
-                    );
+        if (this.state.uploadButtonPressed){
+            return(
+                <div>
+                <h1 style={{ marginLeft: '40.5rem' }} >
+                  BeatParty!
+                  </h1>
+                  <div style = {{ marginLeft: '36.5rem'}}>
+                      <button onClick={this.getShuffledSongs}>Shuffle</button>
+                      <button onClick={this.getTopSongs}>See Top Songs</button>
+                      <button onClick={this.uploadSong}>Upload a Song</button>
+                  </div>
+                <InputFormUploadSong onChange={this.notUploadingAnymore}/>
+                </div>
+            );
         }
-        return (
-          <div className="App" >
-            <TitleAndButtons/>
-            <ol style = {{ marginLeft: '36.5rem'}}>
-            {final}
-            </ol>
-          </div>
-        );
-      }
+        else{
+            const songsToRender = [];
+            for (const currentSong of this.state.songList){
+                songsToRender.push(<Song   id={currentSong['id']}
+                                           artist={currentSong['artistName']}
+                                           date={currentSong['uploadDate']}
+                                           name={currentSong['name']}
+                                           upvotes={currentSong['votes']}
+                                           url={currentSong['songLink']}
+                                   />);
 
-    /*
-    render(){
-        return(
-            <>
-            <div>
-            <TitleAndButtons/>
-            <p> Testing Render here</p>
-            <button onClick={this.goToGithub}>Click to go to Github</button>
-            </div>
-            </>
-        );
+            }
+            console.log("Songs to Render:" + songsToRender);
+            return (
+              <div className="App" >
+                  <h1 style={{ marginLeft: '40.5rem' }} >
+                  BeatParty!
+                  </h1>
+                  <div style = {{ marginLeft: '36.5rem'}}>
+                      <button onClick={this.getShuffledSongs}>Shuffle</button>
+                      <button onClick={this.getTopSongs}>See Top Songs</button>
+                      <button onClick={this.uploadSong}>Upload a Song</button>
+                  </div>
+                    <ol style = {{}}>
+
+                    {songsToRender.map(song => (
+                        <li className="song-list">
+                          {song}
+                        </li>
+                      ))}
+
+                    </ol>
+              </div>
+            );
+        }
     }
-    */
 }
 export default App;
