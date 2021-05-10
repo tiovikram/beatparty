@@ -18,8 +18,9 @@ import org.springframework.web.server.ResponseStatusException;
 /**
  * Unit testing for SongController.java.
  *
- * Note: These unit tests are meant to run independently from the database and are thus rather simplistic.
- * Testing the actual database mutations can only be done with integration testing.
+ * <p> Note: These unit tests are meant to run independently from the database and are
+ * thus rather simplistic. Testing the actual database mutations can only be done with
+ * integration testing.</p>
  */
 public class SongControllerUnitTest {
 
@@ -59,7 +60,7 @@ public class SongControllerUnitTest {
     }
 
     /**
-     * Verify getSongs throws ResponseStatusException when given a negative count
+     * Verify getSongs throws ResponseStatusException when given a negative count.
      */
     @Test(expected = ResponseStatusException.class)
     public void testGetSongsThrowsResponseStatusException() {
@@ -79,7 +80,7 @@ public class SongControllerUnitTest {
     }
 
     /**
-     * Verify getSongs throws ResponseStatusException when given a negative count
+     * Verify getSongs throws ResponseStatusException when given a negative count.
      */
     @Test(expected = ResponseStatusException.class)
     public void testGetShuffledSongsThrowsResponseStatusException() {
@@ -96,7 +97,7 @@ public class SongControllerUnitTest {
     }
 
     /**
-     * Verify upvote is reflected in specified song
+     * Verify upvote is reflected in specified song.
      */
     @Test
     public void testUpvote() {
@@ -108,7 +109,7 @@ public class SongControllerUnitTest {
     }
 
     /**
-     * Verify downvote is reflected in specified song
+     * Verify downvote is reflected in specified song.
      */
     @Test
     public void testDownnote() {
@@ -120,7 +121,7 @@ public class SongControllerUnitTest {
     }
 
     /**
-     * Verify vote API throws ReponseStatusException when invalid id is given
+     * Verify vote API throws ReponseStatusException when invalid id is given.
      */
     @Test(expected = ResponseStatusException.class)
     public void testVoteThrowsResponseStatusException() {
@@ -129,7 +130,7 @@ public class SongControllerUnitTest {
     }
 
     /**
-     * Verify DELETE call to delete a specific song is relayed appropriately to the DAO
+     * Verify DELETE call to delete a specific song is relayed appropriately to the DAO.
     */
     @Test
     public void testDeleteSongBasic() {
@@ -139,7 +140,7 @@ public class SongControllerUnitTest {
     }
 
     /**
-     * Verify deleteSong API throws ResponseStatusException when invalid ID given
+     * Verify deleteSong API throws ResponseStatusException when invalid ID given.
      */
     @Test(expected = ResponseStatusException.class)
     public void testDeleteSongThrowsResponseStatusException() {
