@@ -1,0 +1,48 @@
+.song-container {
+   display:flex; 
+   margin: 5px;
+   border-radius: 25px;
+   background: #eff0f0;
+   padding: 2px;
+}
+
+.upvote-section {
+   margin: 0.5%;
+}
+
+.upvote-button {
+   padding:5px;
+   font-size: x-large;
+   border: none;
+   padding: none;
+   box-shadow: #fff;
+}
+
+.upvote-counter {
+    text-align: center;
+    font-size: large;
+    margin: 20%;
+}
+
+.song-info {
+    padding: 2%;
+}
+
+.song-name {
+    font-size: medium;
+}
+
+.song-metadata {
+    font-size: small;
+    display:flex;
+}
+
+.artist {
+   white-space: nowrap;
+   padding: 2px;
+}
+
+.date {
+  white-space: nowrap;
+  padding: 2px;
+}

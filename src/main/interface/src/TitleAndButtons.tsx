@@ -1,5 +1,11 @@
 import React, {Component} from 'react';
-class TitleAndButtons extends Component<{}, {}>{
+
+interface TitleAndButtonsProps{
+    uploadButtonPressed: boolean;
+    uploadButtonClicked(clicked: boolean): void;
+}
+
+class TitleAndButtons extends Component<TitleAndButtonsProps, {}>{
 
     getShuffledSongs = () =>{
         alert("Shuffled");
@@ -11,6 +17,7 @@ class TitleAndButtons extends Component<{}, {}>{
 
     uploadSong = () =>{
         alert("Uploading");
+        this.props.uploadButtonClicked(true);
     }
 
     render(){
@@ -29,4 +36,5 @@ class TitleAndButtons extends Component<{}, {}>{
     }
 
 }
+
 export default TitleAndButtons;
