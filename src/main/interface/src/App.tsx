@@ -37,7 +37,7 @@ class App extends Component<{}, AppState>{
 
     getSongData = async () => {
        // /*
-        let extendPath = 'http://localhost:8080/getSongs/2';
+        let extendPath = 'http://localhost:8080/getSongs/12';
         try {
             let response = await fetch(extendPath);
             if (!response.ok) {
@@ -65,7 +65,7 @@ class App extends Component<{}, AppState>{
     getShuffledSongs = async () =>{
         //alert("Shuffled");
         ///*
-        let extendPath = 'http://localhost:8080/getShuffledSongs/2';
+        let extendPath = 'http://localhost:8080/getShuffledSongs/12';
         try {
             let response = await fetch(extendPath);
             if (!response.ok) {
@@ -92,7 +92,7 @@ class App extends Component<{}, AppState>{
 
     getTopSongs = async () =>{
         //alert("Top");
-        let extendPath = 'http://localhost:8080/getSongs/20';
+        let extendPath = 'http://localhost:8080/getSongs/12';
         try {
             let response = await fetch(extendPath);
             if (!response.ok) {

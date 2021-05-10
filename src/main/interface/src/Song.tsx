@@ -84,7 +84,7 @@ class Song extends Component<SongProps, SongState> {
                     {this.state.upvotes}
                 </div>
             </div>
-            <a href={this.props.artist}>
+            <a href={this.props.url}>
                 <div className="song-info">
                     <div className="song-name">
                         {this.props.name}
