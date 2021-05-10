@@ -59,6 +59,7 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, InputFormU
             console.log(e);
         }
         alert("New Song Upload! You can now continue browsing music!");
+        this.backToHomePage();
     }
     //single input form song link only
     //validate button - fetch song data from spotify directly
