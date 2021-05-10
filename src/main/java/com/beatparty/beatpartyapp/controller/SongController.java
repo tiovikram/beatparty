@@ -4,11 +4,13 @@ import com.beatparty.beatpartyapp.dao.SongDao;
 import com.beatparty.beatpartyapp.entity.Song;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * SongController maps http endpoints to their corresponding backend API calls.
@@ -20,18 +22,20 @@ public class SongController {
     SongDao songDao;
 
     /**
-     * API to fetch the top 'count' number of songs.
+     * API to fetch the top 'count' number of songs. May return fewer that 'count' songs.
      *
      * @param count - The number of songs to fetch
      * @return list of songs in descending order by number of votes
      */
     @RequestMapping(method = RequestMethod.GET, value = "/getSongs/{count}")
     public List<Song> getSongs(@PathVariable int count) {
+        checkCount(count);
         return songDao.getSongs(count);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getShuffledSongs/{count}")
     public List<Song> getShuffledSongs(@PathVariable int count) {
+        checkCount(count);
         return songDao.getShuffledSongs(count);
     }
 
@@ -52,10 +56,13 @@ public class SongController {
      *
      * @param id - the id of the song to perform the vote on
      * @param vote - A boolean where True represents and up-vote and False represents a down-vote
+     * @throws ResponseStatusException (bad request) if id < 1
      * @return "Vote successful" when vote is successful, "Vote unsuccessful" otherwise
      */
     @RequestMapping(method = RequestMethod.POST, value = "/vote/{id}/{vote}")
     public String vote(@PathVariable int id, @PathVariable boolean vote) {
+        checkId(id);
+
         try {
             Song s = songDao.getOne(id);
             String response;
@@ -77,10 +84,12 @@ public class SongController {
      * API to delete a song.
      *
      * @param id - the id of the song to delete
+     * @throws ResponseStatusException (bad request) if id < 1
      * @return "Song deleted"
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/deleteSong/{id}")
     public String deleteSong(@PathVariable int id) {
+        checkId(id);
         songDao.deleteById(id);
         return "Song deleted";
     }
@@ -94,5 +103,21 @@ public class SongController {
     public String deleteAllSongs() {
         songDao.deleteAllInBatch();
         return "All songs deleted";
+    }
+
+    // Throws a ResponseStatusException (bad request) if id < 1
+    private void checkId(int id) {
+        // id must be positive
+        if (id < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid id");
+        }
+    }
+
+    // Throws a ResponseStatusException (bad request) if count < 0
+    private void checkCount(int count) {
+        // count must be non-negative
+        if (count < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid count");
+        }
     }
 }
