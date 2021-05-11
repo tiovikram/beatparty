@@ -45,6 +45,8 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, InputFormU
 
     submitSong = () =>{
         //alert(this.state.newSongName + " " + this.state.newArtistName + " " + this.state.newURL);
+        let pattern = /((https:\/\/open.spotify.com\/track\/([a-zA-Z0-9]){32})|(https:\/\/www.youtube.com\/watch?v=*)|(https:\/\/soundcloud.com\/))/i;
+        if (pattern.test(this.state.newURL)) {
         var newSongObj = { artistName: this.state.newArtistName, name: this.state.newSongName, songLink: this.state.newURL };
         var myJSON = JSON.stringify(newSongObj);
         console.log(myJSON);
@@ -61,6 +63,9 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, InputFormU
         alert("New Song Upload! You can now continue browsing music!");
         //this.backToHomePage()
         window.location.href = "http://localhost:3000";
+        } else {
+            alert("URL is not a valid Spotify, Youtube or Soundcloud URL");
+        }        
     }
     //single input form song link only
     //validate button - fetch song data from spotify directly
