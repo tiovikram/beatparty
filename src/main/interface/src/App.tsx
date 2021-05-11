@@ -149,7 +149,7 @@ class App extends Component<{}, AppState>{
             const songsToRender = [];
             for (const currentSong of this.state.songList){
                 songsToRender.push(<Song   id={currentSong['id']}
-                                           artist={currentSong['artistName']}
+                                           artist={'by ' + currentSong['artistName']}
                                            date={currentSong['uploadDate']}
                                            name={currentSong['name']}
                                            upvotes={currentSong['votes']}
