@@ -44,7 +44,21 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, InputFormU
     }
 
     submitSong = () =>{
-        //alert(this.state.newSongName + " " + this.state.newArtistName + " " + this.state.newURL);
+        var regexes = [];
+        regexes.push(/https:\/\/open\.spotify\.com\/track\/\w{22}/i);
+        regexes.push(/https:\/\/www\.youtube\.com\/watch\?v=.{11}/i);
+        regexes.push(/https:\/\/www\.soundcloud\.com\/.+\/.+/i);
+        regexes.push(/https:\/\/youtube\.com\/watch\?v=.{11}/i);
+        regexes.push(/https:\/\/soundcloud\.com\/.+\/.+/i);
+        regexes.push(/https:\/\/youtu\.be\/.{11}/i);
+        var matchesAny = false;
+        for (var i = 0; i < regexes.length; i++) {
+            if (regexes[i].test(this.state.newURL)) {
+                matchesAny = true;
+            }
+        }
+
+        if (matchesAny) {
         var newSongObj = { artistName: this.state.newArtistName, name: this.state.newSongName, songLink: this.state.newURL };
         var myJSON = JSON.stringify(newSongObj);
         console.log(myJSON);
@@ -61,6 +75,9 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, InputFormU
         alert("New Song Upload! You can now continue browsing music!");
         //this.backToHomePage()
         window.location.href = "http://localhost:3000";
+        } else {
+            alert("URL is not a valid Spotify, Youtube or Soundcloud URL");
+        }        
     }
     //single input form song link only
     //validate button - fetch song data from spotify directly
