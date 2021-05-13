@@ -12,6 +12,7 @@ A CSE 403: Software Engineering (2021 Spring) group project
   1.1 [Idea](#idea)  
   1.2 [Goals](#goals)  
   1.3 [Stretch Goals](#stretch-goals)  
+  1.4 [Living Document](#living-document)  
 2. [Project Structure](#project-structure)  
   2.1 [Source Code](#source-code)  
   2.2 [Build and Run instructions](#build-and-run-instructions)  
@@ -36,12 +37,15 @@ Develop a web-application that offers the following features to users.
 3. Users can view the songs listed on the platform by their user-determined ranking
 4. Listeners can discover random songs listed on the platform
   
-#### Stretch Goals:
+#### Stretch Goals
 The stretch goals for the application features are as follows.
 1. ~~Stream music within the web application~~ [Listing streaming options via Spotify and SoundCloud allows the third-party music streaming service to handle streaming infrastructure]
 2. Integration with social media platforms (Facebook, Instagram, ~~Spotify~~ [service already used as described above], Twitter)
 3. Private party rooms where partygoers can vote on which song to play next
    
+#### Living Document
+[Link to Living Document](https://docs.google.com/document/d/1OWuXMwgOQdhUNIn8Dmx4U5BM0MS9KcwTB7ALSIegd7Q/edit?usp=sharing)  
+  
 ### Project Structure
 ---
 #### Source Code
