@@ -2,6 +2,10 @@
   
 A CSE 403: Software Engineering (2021 Spring) group project  
   
+### Most Recent Assignment
+---
+[Implementation and Documentation (Tuesday, 18th May, 2021)](#implementation-and-documentation)  
+  
 ### Table of Contents:
 ---
 1. [Ideas And Goals](#ideas-and-goals)  
@@ -18,6 +22,7 @@ A CSE 403: Software Engineering (2021 Spring) group project
   3.3 [Pushing](#pushing)  
 4. [Linting](#linting)  
   4.1 [Running Checkstyle](#running-checkstyle)  
+5. [Implementation and Documentation](#implementation-and-documentation)  
   
 ### Ideas and Goals
 ---
@@ -112,3 +117,9 @@ Pushing changes to an existing branch on remote: `git push`
 **Remote Changes**: If you are working on modules that need attention of other members on, create an upstream branch on remote and continue to push your changes to the upstream branch on `remote`.  Please remind your teammates to pull the most recent commits to the branch from `remote` before beginning any work on the branch.  
   
 ⚠️ **Warning**: Do not push any code directly to the `origin/master` branch under any circumstances, as this **will result in breaking the build**. Please create a branch as described above and create a pull request when ready to merge the branch.
+
+### Implementation and Documentation
+---
+[User Documentation](https://github.com/v-subbiah/beatparty/wiki/User-Documentation)  
+[Developer Documentation](https://github.com/v-subbiah/beatparty/wiki/Developer-Documentation)  
+  
