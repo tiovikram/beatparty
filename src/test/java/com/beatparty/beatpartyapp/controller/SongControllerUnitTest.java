@@ -1,18 +1,18 @@
 
-package com.beatparty.beatpartyapp;
+package com.beatparty.beatpartyapp.controller;
 
-import com.beatparty.beatpartyapp.controller.SongController;
 import com.beatparty.beatpartyapp.dao.SongDao;
 import com.beatparty.beatpartyapp.entity.Song;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -22,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
  * thus rather simplistic. Testing the actual database mutations can only be done with
  * integration testing.</p>
  */
+@SpringBootTest
 public class SongControllerUnitTest {
 
     public static final List<Song> songList = new ArrayList();
@@ -62,9 +63,9 @@ public class SongControllerUnitTest {
     /**
      * Verify getSongs throws ResponseStatusException when given a negative count.
      */
-    @Test(expected = ResponseStatusException.class)
+    @Test
     public void testGetSongsThrowsResponseStatusException() {
-        controller.getSongs(-1);
+        Assertions.assertThrows(ResponseStatusException.class, () -> controller.getSongs(-1));
     }
 
 
@@ -82,9 +83,9 @@ public class SongControllerUnitTest {
     /**
      * Verify getSongs throws ResponseStatusException when given a negative count.
      */
-    @Test(expected = ResponseStatusException.class)
+    @Test
     public void testGetShuffledSongsThrowsResponseStatusException() {
-        controller.getShuffledSongs(-1);
+        Assertions.assertThrows(ResponseStatusException.class, () -> controller.getShuffledSongs(-1));
     }
 
     /**
@@ -123,10 +124,10 @@ public class SongControllerUnitTest {
     /**
      * Verify vote API throws ReponseStatusException when invalid id is given.
      */
-    @Test(expected = ResponseStatusException.class)
+    @Test
     public void testVoteThrowsResponseStatusException() {
         int id = 0;
-        controller.vote(id, true);
+        Assertions.assertThrows(ResponseStatusException.class, () -> controller.vote(id, true));
     }
 
     /**
@@ -142,10 +143,10 @@ public class SongControllerUnitTest {
     /**
      * Verify deleteSong API throws ResponseStatusException when invalid ID given.
      */
-    @Test(expected = ResponseStatusException.class)
+    @Test
     public void testDeleteSongThrowsResponseStatusException() {
         int id = -1;
-        controller.deleteSong(id);
+        Assertions.assertThrows(ResponseStatusException.class, () -> controller.deleteSong(id));
     }
 
     /**
