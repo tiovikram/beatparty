@@ -1,0 +1,1 @@
+src/main/interface/src/index.tsx
