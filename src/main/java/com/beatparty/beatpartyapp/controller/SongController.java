@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 /**
  * SongController maps http endpoints to their corresponding backend API calls.
  */
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
+@CrossOrigin(origins = "https://beatparty.azurewebsites.net", maxAge = 3600)
 @RestController
 public class SongController {
 
