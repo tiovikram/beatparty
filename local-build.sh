@@ -25,7 +25,7 @@ exit_status=$?
 if [[ $exit_status -ne 0 ]]
 then
   echo "Checkstyle returned errors"
-  echo "Run java -jar jars/checkstyle-8.42-all.jar -c src/test/checkstyle/google_checks.xml src/main/java/ to find errors"
+  echo "Run java -jar jars/checkstyle-8.42-all.jar -c src/test/checkstyle/google_checks.xml src/*/java/ to find errors"
   rm -rf ./target/
   exit 1
 fi
