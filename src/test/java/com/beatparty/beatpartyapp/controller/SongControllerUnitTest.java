@@ -85,7 +85,8 @@ public class SongControllerUnitTest {
      */
     @Test
     public void testGetShuffledSongsThrowsResponseStatusException() {
-        Assertions.assertThrows(ResponseStatusException.class, () -> controller.getShuffledSongs(-1));
+        Assertions.assertThrows(ResponseStatusException.class,
+                () -> controller.getShuffledSongs(-1));
     }
 
     /**
