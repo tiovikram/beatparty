@@ -64,7 +64,7 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, InputFormU
         console.log(myJSON);
         try{
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", 'http://localhost:8080/uploadNewSong', true);
+            xhr.open("POST", 'http://13.87.246.41:8080/uploadNewSong', true);
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(myJSON);
         }
@@ -74,7 +74,7 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, InputFormU
         }
         alert("New Song Upload! You can now continue browsing music!");
         //this.backToHomePage()
-        window.location.href = "http://localhost:3000";
+        window.location.href = "https://beatparty.azurewebsites.net";
         } else {
             alert("URL is not a valid Spotify, Youtube or Soundcloud URL");
         }        
