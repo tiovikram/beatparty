@@ -142,8 +142,14 @@ class App extends Component<{}, AppState>{
                       <button onClick={this.uploadSong}>Upload a Song</button>
                   </div>
                 <InputFormUploadSong onChange={this.notUploadingAnymore}/>
+                <div className="feedback">
+                    <p>
+                        <a href="https://forms.gle/Q8QB87Eud7BMbkBg8">Report a bug or give feedback</a>
+                    </p>
                 </div>
-            );
+
+                </div>
+                            );
         }
         else{
             const songsToRender = [];
@@ -177,6 +183,11 @@ class App extends Component<{}, AppState>{
                       ))}
 
                     </ol>
+                <div className="feedback">
+                    <p>
+                        <a href="https://forms.gle/Q8QB87Eud7BMbkBg8">Report a bug or give feedback</a>
+                    </p>
+                </div>
               </div>
             );
         }
