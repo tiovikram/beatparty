@@ -82,7 +82,7 @@ Run the checkstyle linter:
   
 #### Database resources
 This project uses an Azure SQL database to store information for each song.  
-  Azure account: beatpartdev@hotmail.com (Contact rohinmeduri for password)  
+  Azure account: beatpartydev@hotmail.com (Contact rohinmeduri for password)  
   Resource group: Backend  
   Server name: beat-party-server.database.windows.net  
   Database name: BeatPartyDB  
