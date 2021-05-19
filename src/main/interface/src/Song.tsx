@@ -17,6 +17,12 @@ interface SongProps {
     url: string;
 }
 
+/*
+The Song component outlines a Song object It uses SongState as its state and uses SongProps for props.
+
+This component is responsible for storing and rendering song data in a visually-friendly format.
+
+*/
 class Song extends Component<SongProps, SongState> {
 
     constructor(props: any) {

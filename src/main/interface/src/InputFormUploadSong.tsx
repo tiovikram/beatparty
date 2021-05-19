@@ -10,6 +10,13 @@ interface InputFormUploadSongState{
     newURL: string;
 }
 
+/*
+The InputFormUploadSong component controls the 'upload song' functionality.
+It uses InputFormUploadSongState as its state and uses InputFormUploadSongProps for props.
+
+This component is responsible for rendering the input form for uploading new songs,
+parsing input from the form, and transferring the new song data to the back-end of our application.
+*/
 class InputFormUploadSong extends Component<InputFormUploadSongProps, InputFormUploadSongState>{
 
     constructor(props: any){
@@ -73,7 +80,6 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, InputFormU
             console.log(e);
         }
         alert("New Song Upload! You can now continue browsing music!");
-        //this.backToHomePage()
         window.location.href = "http://localhost:3000";
         } else {
             alert("URL is not a valid Spotify, Youtube or Soundcloud URL");

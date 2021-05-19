@@ -1,20 +1,24 @@
 import React, {Component} from 'react';
 
-//import TitleAndButtons from "./TitleAndButtons";
 import Song from './Song';
 import InputFormUploadSong from "./InputFormUploadSong";
 
 import "./App.css";
 
 interface AppState{
-    //songList: Song[];
-
     songList: [];
 
 
     uploadButtonPressed: boolean;
 }
 
+/*
+The App component is the main component for Front-End webpage. It uses AppState as its state and uses no Props.
+
+This component is responsible for retrieving song data from the back-end of the application and
+rendering it on the webpage.
+
+*/
 class App extends Component<{}, AppState>{
 
     //create constructor here
@@ -27,16 +31,7 @@ class App extends Component<{}, AppState>{
         this.getSongData();
     }
 
-    //function to get new data from Back-End
-    /*
-    componentDidMount(){
-        //populate songList with data from Back-End.
-        this.getSongData();
-    }
-    */
-
     getSongData = async () => {
-       // /*
         let extendPath = 'http://localhost:8080/getSongs/12';
         try {
             let response = await fetch(extendPath);
@@ -50,12 +45,10 @@ class App extends Component<{}, AppState>{
                 songList: allSongs,
                 uploadButtonPressed: false,
             })
-            //console.log(this.state.songList);
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
         }
-        //*/
     };
 
     displayPopUp(clicked: boolean){
@@ -63,8 +56,6 @@ class App extends Component<{}, AppState>{
     }
 
     getShuffledSongs = async () =>{
-        //alert("Shuffled");
-        ///*
         let extendPath = 'http://localhost:8080/getShuffledSongs/12';
         try {
             let response = await fetch(extendPath);
@@ -82,12 +73,10 @@ class App extends Component<{}, AppState>{
                 songList: shuffleSongs,
                 uploadButtonPressed: false,
             })
-            //console.log(this.state.songList);
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
         }
-        //*/
     }
 
     getTopSongs = async () =>{
@@ -116,8 +105,6 @@ class App extends Component<{}, AppState>{
     }
 
     uploadSong = () =>{
-        //alert("Uploading");
-        //this.props.uploadButtonClicked(true);
         this.setState({
             uploadButtonPressed: true,
         })
