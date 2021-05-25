@@ -38,7 +38,7 @@ public class Song {
     }
 
     /**
-     * Creates a song with the given name by the given artist. A link to the song is also required
+     * Creates a song with the given name by the given artist. A link to the song is also required.
      *
      * @param name the name of the song
      * @param artistName the name of the artist

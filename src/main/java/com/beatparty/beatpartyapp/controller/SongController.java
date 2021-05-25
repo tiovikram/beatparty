@@ -2,6 +2,7 @@ package com.beatparty.beatpartyapp.controller;
 
 import com.beatparty.beatpartyapp.dao.SongDao;
 import com.beatparty.beatpartyapp.entity.Song;
+import com.beatparty.beatpartyapp.entity.Vote;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,19 +57,19 @@ public class SongController {
     /**
      * API to up-vote or down-vote a particular song.
      *
-     * @param id - the id of the song to perform the vote on
-     * @param vote - A boolean where True represents and up-vote and False represents a down-vote
-     * @throws ResponseStatusException (bad request) if id < 1
+     * @param vote - the vote to perform
+     * @throws ResponseStatusException (bad request) if song id < 1
      * @return "Vote successful" when vote is successful, "Vote unsuccessful" otherwise
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/vote/{id}/{vote}")
-    public String vote(@PathVariable int id, @PathVariable boolean vote) {
-        checkId(id);
+    @RequestMapping(method = RequestMethod.POST, value = "/vote")
+    public String vote(@RequestBody Vote vote) {
+        int songId = vote.getSongId();
 
+        checkId(vote.getSongId());
         try {
-            Song s = songDao.getOne(id);
+            Song s = songDao.getOne(songId);
             String response;
-            if (vote) {
+            if (vote.getVote()) {
                 s.upvote();
                 response = "Upvote successful";
             } else {
