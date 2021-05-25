@@ -1,9 +1,14 @@
 package com.beatparty.beatpartyapp.controller;
 
 import com.beatparty.beatpartyapp.dao.SongDao;
+import com.beatparty.beatpartyapp.dao.UserVotesDao;
 import com.beatparty.beatpartyapp.entity.Song;
+import com.beatparty.beatpartyapp.entity.UserVote;
+import com.beatparty.beatpartyapp.entity.UserVoteId;
 import com.beatparty.beatpartyapp.entity.Vote;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,6 +28,9 @@ public class SongController {
 
     @Autowired
     SongDao songDao;
+
+    @Autowired
+    UserVotesDao userVotesDao;
 
     /**
      * API to fetch the top 'count' number of songs. May return fewer that 'count' songs.
@@ -63,18 +71,38 @@ public class SongController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/vote")
     public String vote(@RequestBody Vote vote) {
+        // Check id is valid
         int songId = vote.getSongId();
-
         checkId(vote.getSongId());
+
+        // Extract user Id
+        String userId = "lol";
+        UserVoteId userVoteId = new UserVoteId(userId, songId);
+
         try {
+            // Check if user has already voted for the song
+            boolean voted = userVotesDao.existsById(userVoteId);
+
             Song s = songDao.getOne(songId);
             String response;
             if (vote.getVote()) {
-                s.upvote();
-                response = "Upvote successful";
+                if (!voted) {
+                    // Record new vote
+                    userVotesDao.save(new UserVote(userId, songId));
+                    s.upvote();
+                    response = "Upvote successful";
+                } else {
+                    response = "Already upvoted";
+                }
             } else {
-                s.downvote();
-                response = "Downvote successful";
+                if (voted) {
+                    // Undo upvote
+                    userVotesDao.deleteById(userVoteId);
+                    s.downvote();
+                    response = "Downvote successful";
+                } else {
+                    response = "User has not upvoted";
+                }
             }
             songDao.saveAndFlush(s);
             return response;
