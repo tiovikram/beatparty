@@ -1,16 +1,8 @@
 package com.beatparty.beatpartyapp.entity;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-
 /**
- * A class that represents a Google user. Given an ID token string, this class stores the
- * associated user's ID, name and email.
+ * An immutable class that represents a Google user. This class stores the associated user's ID,
+ * name and email.
  */
 public class GoogleUser {
 
@@ -18,33 +10,17 @@ public class GoogleUser {
     private final String email;
     private final String name;
 
-    private static final GoogleIdTokenVerifier VERIFIER = new GoogleIdTokenVerifier
-            .Builder(new NetHttpTransport(), new GsonFactory())
-            // Suppress audience check by passing in null
-            .setAudience(null)
-            .build();
-
     /**
-     * Constructs a new GoogleUser for a user that has the given ID.
+     * Constructs a new GoogleUser for a user that has the given ID, email, and name.
      *
-     * @param idTokenString the Google user's ID token retrieved from the sign-in
-     * @throws GeneralSecurityException See Google API JavaDoc
-     *                                  https://googleapis.dev/java/google-api-client/latest/
-     * @throws IOException See Google API JavaDoc
-     *                     https://googleapis.dev/java/google-api-client/latest/
+     * @param id the Google user's ID
+     * @param email the Google user's email
+     * @param name the Google user's name
      */
-    public GoogleUser(String idTokenString) throws GeneralSecurityException, IOException {
-        GoogleIdToken idToken = VERIFIER.verify(idTokenString);
-        if (idToken != null) {
-            Payload payload = idToken.getPayload();
-            this.id = payload.getSubject();
-            this.email = payload.getEmail();
-            this.name = (String) payload.get("name");
-        } else {
-            this.id = null;
-            this.email = null;
-            this.name = null;
-        }
+    public GoogleUser(String id, String email, String name) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
     }
 
     /**
