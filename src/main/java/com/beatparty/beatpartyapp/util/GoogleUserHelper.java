@@ -32,7 +32,7 @@ public class GoogleUserHelper {
      * @throws IOException See Google API JavaDoc
      *                     https://googleapis.dev/java/google-api-client/latest/
      */
-    public static GoogleUser getGoogleUser(String idTokenString)
+    public GoogleUser getGoogleUser(String idTokenString)
             throws GeneralSecurityException, IOException {
         GoogleIdToken idToken = VERIFIER.verify(idTokenString);
         if (idToken != null) {
