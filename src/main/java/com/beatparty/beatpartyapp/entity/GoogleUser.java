@@ -18,6 +18,12 @@ public class GoogleUser {
     private final String email;
     private final String name;
 
+    private static final GoogleIdTokenVerifier VERIFIER = new GoogleIdTokenVerifier
+            .Builder(new NetHttpTransport(), new GsonFactory())
+            // Suppress audience check by passing in null
+            .setAudience(null)
+            .build();
+
     /**
      * Constructs a new GoogleUser for a user that has the given ID.
      *
@@ -28,12 +34,7 @@ public class GoogleUser {
      *                     https://googleapis.dev/java/google-api-client/latest/
      */
     public GoogleUser(String idTokenString) throws GeneralSecurityException, IOException {
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier
-                .Builder(new NetHttpTransport(), new GsonFactory())
-                // Suppress audience check by passing in null
-                .setAudience(null)
-                .build();
-        GoogleIdToken idToken = verifier.verify(idTokenString);
+        GoogleIdToken idToken = VERIFIER.verify(idTokenString);
         if (idToken != null) {
             Payload payload = idToken.getPayload();
             this.id = payload.getSubject();
