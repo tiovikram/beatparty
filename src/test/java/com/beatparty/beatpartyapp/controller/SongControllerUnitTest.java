@@ -109,6 +109,38 @@ public class SongControllerUnitTest {
     }
 
     /**
+     * Verify call to GetSongsVotedByUser is relayed to the userVotesDao appropriately.
+     */
+    @Test
+    public void testGetSongsVotedByUserBasic() throws GeneralSecurityException, IOException {
+        Mockito.when(googleUserHelper.getGoogleUser(USER_ID_TOKEN)).thenReturn(googleUser);
+        Mockito.when(googleUser.getId()).thenReturn(USER_ID);
+
+        List<UserVote> voteList = new ArrayList<>();
+        voteList.add(new UserVote(USER_ID, 1));
+        voteList.add(new UserVote(USER_ID, 2));
+        Mockito.when(userVotesDao.getSongsVotedByUser(USER_ID)).thenReturn(voteList);
+
+        List<Integer> idList = new ArrayList<>();
+        idList.add(1);
+        idList.add(2);
+        List<Integer> actual = controller.getSongsVotedByUser(USER_ID_TOKEN);
+        Assertions.assertEquals(idList, actual);
+    }
+
+    /**
+     * Verify call to GetSongsVotedByUser throws ResponseStatusException on invalid id.
+     */
+    @Test
+    public void testGetSongsVotedByUserThrowsResponseStatusException()
+            throws GeneralSecurityException, IOException {
+        Mockito.when(googleUserHelper.getGoogleUser(USER_ID_TOKEN))
+                .thenThrow(GeneralSecurityException.class);
+        Assertions.assertThrows(ResponseStatusException.class,
+                () -> controller.getSongsVotedByUser(USER_ID_TOKEN));
+    }
+
+    /**
      * Verify call to upload a new song is relayed to the songDao appropriately.
     */
     @Test
