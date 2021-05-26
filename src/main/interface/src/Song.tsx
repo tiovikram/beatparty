@@ -32,7 +32,6 @@ class Song extends Component<SongProps, SongState> {
             isVoted: false,
             upvotes: this.props.upvotes
         };
-        console.log(this.state.upvotes);
     }
 
     upvote = (isVoted: boolean, upvotes: number) => {
