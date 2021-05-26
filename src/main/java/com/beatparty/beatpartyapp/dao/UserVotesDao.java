@@ -11,4 +11,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserVotesDao extends JpaRepository<UserVote, UserVoteId> {
+
+    @Query(value = "SELECT * from user_votes u WHERE u.user_id == (:token)", nativeQuery = true)
+    List<Song> getSongsVotedByUser(@Param("token") String token);
+    
 }
