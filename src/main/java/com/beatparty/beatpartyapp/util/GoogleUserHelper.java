@@ -7,11 +7,13 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import org.springframework.stereotype.Component;
 
 /**
  * A helper class that helps construct instances of the GoogleUser class.
  *
  */
+@Component("googleUserHelper")
 public class GoogleUserHelper {
 
     private static final GoogleIdTokenVerifier VERIFIER = new GoogleIdTokenVerifier

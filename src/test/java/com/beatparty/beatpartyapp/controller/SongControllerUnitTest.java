@@ -2,7 +2,15 @@
 package com.beatparty.beatpartyapp.controller;
 
 import com.beatparty.beatpartyapp.dao.SongDao;
+import com.beatparty.beatpartyapp.dao.UserVotesDao;
+import com.beatparty.beatpartyapp.entity.GoogleUser;
 import com.beatparty.beatpartyapp.entity.Song;
+import com.beatparty.beatpartyapp.entity.UserVote;
+import com.beatparty.beatpartyapp.entity.UserVoteId;
+import com.beatparty.beatpartyapp.entity.Vote;
+import com.beatparty.beatpartyapp.util.GoogleUserHelper;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
@@ -26,18 +34,29 @@ import org.springframework.web.server.ResponseStatusException;
 public class SongControllerUnitTest {
 
     public static final List<Song> songList = new ArrayList();
+    public static final String USER_ID = "UserId";
+    public static final String USER_ID_TOKEN = "UserIdToken";
 
     @InjectMocks
     private SongController controller;
 
     @Mock
-    private SongDao dao;
+    private SongDao songDao;
+
+    @Mock
+    private UserVotesDao userVotesDao;
+
+    @Mock
+    private GoogleUserHelper googleUserHelper;
+
+    @Mock
+    private GoogleUser googleUser;
 
     @Mock
     private Song song;
 
     @Before
-    public void initMocks() {
+    public void initMocks() throws GeneralSecurityException, IOException {
         MockitoAnnotations.openMocks(this);
     }
 
@@ -50,12 +69,12 @@ public class SongControllerUnitTest {
     }
 
     /**
-     * Verify call to getSongs API is relayed to the DAO appropriately.
+     * Verify call to getSongs API is relayed to the songDao appropriately.
      */
     @Test
     public void testGetSongsBasic() {
         int count = 0;
-        Mockito.when(dao.getSongs(count)).thenReturn(songList);
+        Mockito.when(songDao.getSongs(count)).thenReturn(songList);
         List<Song> actual = controller.getSongs(count);
         Assertions.assertEquals(actual, songList);
     }
@@ -70,12 +89,12 @@ public class SongControllerUnitTest {
 
 
     /**
-     * Verify call to getShuffledSongs API call is relayed to DAO appropriately.
+     * Verify call to getShuffledSongs API call is relayed to songDao appropriately.
     */
     @Test
     public void testGetShuffledSongsBasic() {
         int count = 1;
-        Mockito.when(dao.getShuffledSongs(1)).thenReturn(songList);
+        Mockito.when(songDao.getShuffledSongs(1)).thenReturn(songList);
         List<Song> actual = controller.getShuffledSongs(count);
         Assertions.assertEquals(actual, songList);
     }
@@ -90,55 +109,125 @@ public class SongControllerUnitTest {
     }
 
     /**
-     * Verify call to upload a new song is relayed to the DAO appropriately.
+     * Verify call to upload a new song is relayed to the songDao appropriately.
     */
     @Test
     public void testUploadSongBasic() {
         controller.uploadSong(song);
-        Mockito.verify(dao, Mockito.times(1)).save(song);
+        Mockito.verify(songDao, Mockito.times(1)).save(song);
     }
 
     /**
      * Verify upvote is reflected in specified song.
      */
     @Test
-    public void testUpvote() {
-        int id = 1;
-        Mockito.when(dao.getOne(id)).thenReturn(song);
-        controller.vote(id, true);
+    public void testUpvote() throws GeneralSecurityException, IOException {
+        int songId = 1;
+        UserVoteId userVoteId = new UserVoteId(USER_ID, songId);
+
+        Mockito.when(googleUserHelper.getGoogleUser(USER_ID_TOKEN)).thenReturn(googleUser);
+        Mockito.when(googleUser.getId()).thenReturn(USER_ID);
+        Mockito.when(songDao.getOne(songId)).thenReturn(song);
+        Mockito.when(userVotesDao.existsById(userVoteId)).thenReturn(false);
+
+        Vote vote = new Vote(USER_ID_TOKEN, songId, true);
+        controller.vote(vote);
         Mockito.verify(song, Mockito.times(1)).upvote();
-        Mockito.verify(dao, Mockito.times(1)).saveAndFlush(song);
+        UserVote userVote = new UserVote(USER_ID, songId);
+        Mockito.verify(userVotesDao, Mockito.times(1)).save(userVote);
+        Mockito.verify(songDao, Mockito.times(1)).saveAndFlush(song);
+    }
+
+    /**
+     * Test upvote when already voted.
+     */
+    @Test
+    public void testUpvoteAlreadyVoted() throws GeneralSecurityException, IOException {
+        int songId = 1;
+
+        Mockito.when(googleUserHelper.getGoogleUser(USER_ID_TOKEN)).thenReturn(googleUser);
+        Mockito.when(googleUser.getId()).thenReturn(USER_ID);
+        Mockito.when(songDao.getOne(songId)).thenReturn(song);
+        UserVoteId userVoteId = new UserVoteId(USER_ID, songId);
+        Mockito.when(userVotesDao.existsById(userVoteId)).thenReturn(true);
+
+        Vote vote = new Vote(USER_ID_TOKEN, songId, true);
+        controller.vote(vote);
+        Mockito.verify(song, Mockito.times(0)).upvote();
+        UserVote userVote = new UserVote(USER_ID, songId);
+        Mockito.verify(userVotesDao, Mockito.times(0)).save(userVote);
     }
 
     /**
      * Verify downvote is reflected in specified song.
      */
     @Test
-    public void testDownnote() {
-        int id = 1;
-        Mockito.when(dao.getOne(id)).thenReturn(song);
-        controller.vote(id, false);
+    public void testDownvote() throws GeneralSecurityException, IOException {
+        int songId = 1;
+        UserVoteId userVoteId = new UserVoteId(USER_ID, songId);
+
+        Mockito.when(googleUserHelper.getGoogleUser(USER_ID_TOKEN)).thenReturn(googleUser);
+        Mockito.when(googleUser.getId()).thenReturn(USER_ID);
+        Mockito.when(songDao.getOne(songId)).thenReturn(song);
+        Mockito.when(userVotesDao.existsById(userVoteId)).thenReturn(true);
+
+        Vote vote = new Vote(USER_ID_TOKEN, songId, false);
+        controller.vote(vote);
         Mockito.verify(song, Mockito.times(1)).downvote();
-        Mockito.verify(dao, Mockito.times(1)).saveAndFlush(song);
+        Mockito.verify(userVotesDao, Mockito.times(1)).deleteById(userVoteId);
+        Mockito.verify(songDao, Mockito.times(1)).saveAndFlush(song);
     }
 
     /**
-     * Verify vote API throws ReponseStatusException when invalid id is given.
+     * Test downvote when not already upvoted.
      */
     @Test
-    public void testVoteThrowsResponseStatusException() {
-        int id = 0;
-        Assertions.assertThrows(ResponseStatusException.class, () -> controller.vote(id, true));
+    public void testDownvoteHaventUpvoted() throws GeneralSecurityException, IOException {
+        int songId = 1;
+        UserVoteId userVoteId = new UserVoteId(USER_ID, songId);
+
+        Mockito.when(googleUserHelper.getGoogleUser(USER_ID_TOKEN)).thenReturn(googleUser);
+        Mockito.when(googleUser.getId()).thenReturn(USER_ID);
+        Mockito.when(songDao.getOne(songId)).thenReturn(song);
+        Mockito.when(userVotesDao.existsById(userVoteId)).thenReturn(false);
+
+        Vote vote = new Vote(USER_ID_TOKEN, songId, false);
+        controller.vote(vote);
+        Mockito.verify(song, Mockito.times(0)).downvote();
     }
 
     /**
-     * Verify DELETE call to delete a specific song is relayed appropriately to the DAO.
+     * Verify vote API throws ResponseStatusException when invalid id is given.
+     */
+    @Test
+    public void testVoteThrowsResponseStatusExceptionWhenInvalidId() {
+
+        int id = 1;
+        Vote vote = new Vote(USER_ID_TOKEN, id, true);
+        Assertions.assertThrows(ResponseStatusException.class, () -> controller.vote(vote));
+    }
+
+    /**
+     * Verify vote API throws ResponseStatusException when authentication fails.
+     */
+    @Test
+    public void testVoteThrowsResponseStatusExceptionWhenAuthenticationFails()
+            throws GeneralSecurityException, IOException {
+        Mockito.when(googleUserHelper.getGoogleUser(USER_ID_TOKEN))
+                .thenThrow(GeneralSecurityException.class);
+        int id = 1;
+        Vote vote = new Vote(USER_ID_TOKEN, id, true);
+        Assertions.assertThrows(ResponseStatusException.class, () -> controller.vote(vote));
+    }
+
+    /**
+     * Verify DELETE call to delete a specific song is relayed appropriately to the songDao.
     */
     @Test
     public void testDeleteSongBasic() {
         int id = 1;
         controller.deleteSong(id);
-        Mockito.verify(dao, Mockito.times(1)).deleteById(id);
+        Mockito.verify(songDao, Mockito.times(1)).deleteById(id);
     }
 
     /**
@@ -156,6 +245,6 @@ public class SongControllerUnitTest {
     @Test
     public void testDeleteAllSongsBasic() {
         controller.deleteAllSongs();
-        Mockito.verify(dao, Mockito.times(1)).deleteAllInBatch();
+        Mockito.verify(songDao, Mockito.times(1)).deleteAllInBatch();
     }
 }
