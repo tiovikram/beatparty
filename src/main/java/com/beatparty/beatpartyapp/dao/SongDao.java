@@ -27,6 +27,6 @@ public interface SongDao extends JpaRepository<Song, Integer> {
     List<Song> getShuffledSongs(@Param("count") int count);
 
     @Query(value = "SELECT 1 from Songs s WHERE s.id == (:id)", nativeQuery = true)
-    Song getSongByID(@Param("id") int id);
+    Song getSongById(@Param("id") int id);
 
 }

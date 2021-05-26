@@ -1,13 +1,12 @@
 package com.beatparty.beatpartyapp.dao;
 
-import com.beatparty.beatpartyapp.entity.Song;
 import com.beatparty.beatpartyapp.entity.UserVote;
 import com.beatparty.beatpartyapp.entity.UserVoteId;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import java.util.List;
 
 /**
  * UserVotesDao provides an interface to interact with the UserVotes database which stores

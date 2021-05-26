@@ -2,14 +2,16 @@ package com.beatparty.beatpartyapp.controller;
 
 import com.beatparty.beatpartyapp.dao.SongDao;
 import com.beatparty.beatpartyapp.dao.UserVotesDao;
-import com.beatparty.beatpartyapp.entity.*;
+import com.beatparty.beatpartyapp.entity.GoogleUser;
+import com.beatparty.beatpartyapp.entity.Song;
+import com.beatparty.beatpartyapp.entity.UserVote;
+import com.beatparty.beatpartyapp.entity.UserVoteId;
+import com.beatparty.beatpartyapp.entity.Vote;
 import com.beatparty.beatpartyapp.util.GoogleUserHelper;
-
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +35,7 @@ public class SongController {
     GoogleUserHelper googleUserHelper;
 
     /**
-     * API to fetch the top 'count' number of songs. May return fewer that 'count' songs.
+     * API to fetch the top 'count' number of songs. May return fewer than 'count' songs.
      *
      * @param count - The number of songs to fetch
      * @return list of songs in descending order by number of votes
@@ -44,20 +46,33 @@ public class SongController {
         return songDao.getSongs(count);
     }
 
+    /**
+     * API to fetch the a random variation of 'count' songs. May return fewer than 'count' songs.
+     *
+     * @param count - The number of random songs to fetch
+     * @return list of random songs
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/getShuffledSongs/{count}")
     public List<Song> getShuffledSongs(@PathVariable int count) {
         checkCount(count);
         return songDao.getShuffledSongs(count);
     }
 
+    /**
+     * API to fetch all the Songs that have been voted on by a user with the given ID token.
+     *
+     * @param token - The ID token of the user whose voted-on songs we need to fetch
+     * @return list of songs voted on by the user associated with the given ID token if the token
+     *         is valid. Otherwise, returns null
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/getSongsVotedByUser/{token}")
     public List<Song> getSongsVotedByUser(@PathVariable String token) {
         try {
-            GoogleUser gUser = googleUserHelper.getGoogleUser(token);
-            List<UserVote> userVotes = userVotesDao.getSongsVotedByUser(gUser.getId());
+            GoogleUser googleUser = googleUserHelper.getGoogleUser(token);
+            List<UserVote> userVotes = userVotesDao.getSongsVotedByUser(googleUser.getId());
             List<Song> songList = new ArrayList<>();
             for (UserVote userVote : userVotes) {
-                songList.add(songDao.getSongByID(userVote.getSongId()));
+                songList.add(songDao.getSongById(userVote.getSongId()));
             }
             return songList;
         } catch (Exception e) {
