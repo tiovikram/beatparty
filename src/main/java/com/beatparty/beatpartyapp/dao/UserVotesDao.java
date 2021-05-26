@@ -17,6 +17,6 @@ import java.util.List;
 public interface UserVotesDao extends JpaRepository<UserVote, UserVoteId> {
 
     @Query(value = "SELECT * from user_votes u WHERE u.user_id == (:id)", nativeQuery = true)
-    List<Song> getSongsVotedByUser(@Param("id") String id);
+    List<UserVote> getSongsVotedByUser(@Param("id") String id);
     
 }
