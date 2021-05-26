@@ -2,10 +2,7 @@ package com.beatparty.beatpartyapp.controller;
 
 import com.beatparty.beatpartyapp.dao.SongDao;
 import com.beatparty.beatpartyapp.dao.UserVotesDao;
-import com.beatparty.beatpartyapp.entity.Song;
-import com.beatparty.beatpartyapp.entity.UserVote;
-import com.beatparty.beatpartyapp.entity.UserVoteId;
-import com.beatparty.beatpartyapp.entity.Vote;
+import com.beatparty.beatpartyapp.entity.*;
 import com.beatparty.beatpartyapp.util.GoogleUserHelper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +46,16 @@ public class SongController {
     public List<Song> getShuffledSongs(@PathVariable int count) {
         checkCount(count);
         return songDao.getShuffledSongs(count);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/getSongsVotedByUser/{token}")
+    public List<Song> getSongsVotedByUser(@PathVariable String token) {
+        try {
+            GoogleUser gUser = googleUserHelper.getGoogleUser(token);
+            return userVotesDao.getSongsVotedByUser(gUser.getId());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
