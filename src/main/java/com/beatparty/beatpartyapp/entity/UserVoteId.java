@@ -11,6 +11,10 @@ public class UserVoteId implements Serializable {
     private String userId;
     private int songId;
 
+    // Default constructor required for serialization
+    public UserVoteId() {
+    }
+
     /**
      * Creates a new UserVoteId with the provided values.
      *

@@ -9,16 +9,24 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import com.beatparty.beatpartyapp.entity.GoogleUser;
 import com.beatparty.beatpartyapp.entity.Song;
+import com.beatparty.beatpartyapp.entity.Vote;
+import com.beatparty.beatpartyapp.util.GoogleUserHelper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,6 +47,10 @@ public class SongControllerIntegrationTest {
     public static final String ARTIST_NAME = "artistName";
     public static final Date UPLOAD_DATE = new Date();
     public static final String UPLOAD_LINK = "uploadLink";
+    public static final String USER_ID = "UserId";
+    public static final String USER_ID_TOKEN = "UserIdToken";
+    public static final String SECOND_USER_ID = "SecondUserId";
+    public static final String SECOND_USER_ID_TOKEN = "SecondUserIdToken";
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -46,11 +58,24 @@ public class SongControllerIntegrationTest {
     private ObjectMapper objectMapper;
     private Song song;
 
+    @MockBean
+    GoogleUserHelper googleUserHelper;
+    @Mock
+    GoogleUser googleUser1;
+    @Mock
+    GoogleUser googleUser2;
+
     @BeforeEach
-    private void init() {
+    private void init() throws GeneralSecurityException, IOException {
         objectMapper = new ObjectMapper();
         song = new Song(NAME, ARTIST_NAME, UPLOAD_DATE, UPLOAD_LINK);
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+
+        // Set up authentication mock
+        Mockito.when(googleUserHelper.getGoogleUser(USER_ID_TOKEN)).thenReturn(googleUser1);
+        Mockito.when(googleUser1.getId()).thenReturn(USER_ID);
+        Mockito.when(googleUserHelper.getGoogleUser(SECOND_USER_ID_TOKEN)).thenReturn(googleUser2);
+        Mockito.when(googleUser2.getId()).thenReturn(SECOND_USER_ID);
     }
 
     /**
@@ -134,8 +159,10 @@ public class SongControllerIntegrationTest {
         int id = getId();
 
         // Perform a vote on the song
-        boolean vote = true;
-        mvc.perform(post("/vote/" + id + "/" + vote))
+        Vote vote = new Vote(USER_ID_TOKEN, id, true);
+        mvc.perform(post("/vote")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(vote)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         // Check vote is registered
@@ -153,12 +180,17 @@ public class SongControllerIntegrationTest {
         addSong();
         int id = getId();
 
-        // Perform two votes on the song
-        boolean vote = true;
-        for (int i = 1; i <= 2; i++) {
-            mvc.perform(post("/vote/" + id + "/" + vote))
-                    .andExpect(MockMvcResultMatchers.status().isOk());
-        }
+        // Perform two votes on the song from different users
+        Vote vote = new Vote(USER_ID_TOKEN, id, true);
+        mvc.perform(post("/vote")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(vote)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+        vote = new Vote(SECOND_USER_ID_TOKEN, id, true);
+        mvc.perform(post("/vote")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(vote)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
         // Check votes are registered
         mvc.perform(get("/getSongs/1"))
@@ -168,23 +200,54 @@ public class SongControllerIntegrationTest {
     }
 
     /**
-     * Test upvote registered.
+     * Test second upvote by same user prevented.
+     */
+    @Test
+    public void duplicateUpvotePrevented() throws Exception {
+        addSong();
+        int id = getId();
+
+        // Perform two votes on the song from the same users
+        for (int i = 1; i <= 2; i++) {
+            Vote vote = new Vote(USER_ID_TOKEN, id, true);
+            mvc.perform(post("/vote")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(vote)))
+                    .andExpect(MockMvcResultMatchers.status().isOk());
+        }
+
+        // Check only one vote is registered
+        mvc.perform(get("/getSongs/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].votes", is(1)));
+    }
+
+    /**
+     * Test downvote registered.
      */
     @Test
     public void downvoteRegistered() throws Exception {
         addSong();
         int id = getId();
 
-        // Perform a vote on the song
-        boolean vote = false;
-        mvc.perform(post("/vote/" + id + "/" + vote))
+        // Perform a downvote on the song (first have to upvote)
+        Vote vote = new Vote(USER_ID_TOKEN, id, true);
+        mvc.perform(post("/vote")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(vote)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+        vote = new Vote(USER_ID_TOKEN, id, false);
+        mvc.perform(post("/vote")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(vote)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         // Check vote is registered
         mvc.perform(get("/getSongs/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].votes", is(-1)));
+                .andExpect(jsonPath("$[0].votes", is(0)));
     }
 
     /**
@@ -195,35 +258,23 @@ public class SongControllerIntegrationTest {
         addSong();
         int id = getId();
 
-        // Perform two votes on the song
-        boolean vote = false;
+        // Perform a downvote on the song (first have to upvote)
         for (int i = 1; i <= 2; i++) {
-            mvc.perform(post("/vote/" + id + "/" + vote))
+            Vote vote = new Vote(USER_ID_TOKEN, id, true);
+            mvc.perform(post("/vote")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(vote)))
+                    .andExpect(MockMvcResultMatchers.status().isOk());
+        }
+        for (int i = 1; i <= 2; i++) {
+            Vote vote = new Vote(USER_ID_TOKEN, id, false);
+            mvc.perform(post("/vote")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(vote)))
                     .andExpect(MockMvcResultMatchers.status().isOk());
         }
 
         // Check votes are registered
-        mvc.perform(get("/getSongs/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].votes", is(-2)));
-    }
-
-    /**
-     * Test upvote and downvote registered.
-     */
-    @Test
-    public void upvoteAndDownvote() throws Exception {
-        addSong();
-        int id = getId();
-
-        // Perform a vote on the song
-        mvc.perform(post("/vote/" + id + "/true"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-        mvc.perform(post("/vote/" + id + "/false"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        // Check vote is registered
         mvc.perform(get("/getSongs/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -236,9 +287,24 @@ public class SongControllerIntegrationTest {
     @Test
     public void voteReturnsBadRequest() throws Exception {
         int id = 0;
-        boolean vote = true;
-        mvc.perform(post("/vote/" + id + "/" + vote))
+        Vote vote = new Vote(USER_ID_TOKEN, id, true);
+        mvc.perform(post("/vote")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(vote)))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    /**
+     * Test vote returns Unauthorized on failed authentication.
+     */
+    @Test
+    public void voteReturnsUnauthorized() throws Exception {
+        int id = 1;
+        Vote vote = new Vote("BadIdToken", id, true);
+        mvc.perform(post("/vote")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(vote)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
     /**

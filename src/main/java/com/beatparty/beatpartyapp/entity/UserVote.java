@@ -1,11 +1,10 @@
 package com.beatparty.beatpartyapp.entity;
 
-import lombok.Data;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
+import lombok.Data;
 
 /**
  * UserVote represents an entry in the user_votes table.

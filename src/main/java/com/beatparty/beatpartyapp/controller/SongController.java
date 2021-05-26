@@ -6,9 +6,8 @@ import com.beatparty.beatpartyapp.entity.Song;
 import com.beatparty.beatpartyapp.entity.UserVote;
 import com.beatparty.beatpartyapp.entity.UserVoteId;
 import com.beatparty.beatpartyapp.entity.Vote;
+import com.beatparty.beatpartyapp.util.GoogleUserHelper;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,6 +30,9 @@ public class SongController {
 
     @Autowired
     UserVotesDao userVotesDao;
+
+    @Autowired
+    GoogleUserHelper googleUserHelper;
 
     /**
      * API to fetch the top 'count' number of songs. May return fewer that 'count' songs.
@@ -76,7 +78,12 @@ public class SongController {
         checkId(vote.getSongId());
 
         // Extract user Id
-        String userId = "lol";
+        String userId;
+        try {
+            userId = googleUserHelper.getGoogleUser(vote.getUserIdToken()).getId();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication failed");
+        }
         UserVoteId userVoteId = new UserVoteId(userId, songId);
 
         try {
@@ -104,6 +111,7 @@ public class SongController {
                     response = "User has not upvoted";
                 }
             }
+
             songDao.saveAndFlush(s);
             return response;
         } catch (Exception e) {
