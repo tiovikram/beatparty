@@ -116,6 +116,14 @@ class App extends Component<{}, AppState>{
         });
     }
 
+    onSignIn = (googleUser: any) => {
+        var profile = googleUser.getBasicProfile();
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+    }
+
     render() {
         if (this.state.uploadButtonPressed){
             return(
@@ -152,30 +160,41 @@ class App extends Component<{}, AppState>{
             }
             console.log("Songs to Render:" + songsToRender);
             return (
-              <div className="App" >
-                  <h1 style={{ marginLeft: '40.5rem' }} >
-                  BeatParty!
-                  </h1>
-                  <div style = {{ marginLeft: '36.5rem'}}>
-                      <button onClick={this.getShuffledSongs}>Shuffle</button>
-                      <button onClick={this.getTopSongs}>See Top Songs</button>
-                      <button onClick={this.uploadSong}>Upload a Song</button>
-                  </div>
-                    <ol style = {{}}>
+		<div className="App" >
+			<meta name="google-signin-client_id" content="135607733919-k99bm0ldihbmko0hkg4b3pfmp3dj6ue9.apps.googleusercontent.com"></meta>
+			<h1 style={{ marginLeft: '40.5rem' }} >
+				BeatParty!
+			</h1>
+			<div style = {{ marginLeft: '36.5rem'}}>
+				<button onClick={this.getShuffledSongs}>Shuffle</button>
+				<button onClick={this.getTopSongs}>See Top Songs</button>
+				<button onClick={this.uploadSong}>Upload a Song</button>
+				<div class="g-signin2" data-onsuccess="onSignIn"></div>
+			</div>
+			<ol style = {{}}>
 
-                    {songsToRender.map(song => (
-                        <li className="song-list">
-                          {song}
-                        </li>
-                      ))}
+				{songsToRender.map(song => (
+				<li className="song-list">
+					{song}
+				</li>
+				))}
 
-                    </ol>
-                <div className="feedback">
-                    <p>
-                        <a href="https://forms.gle/Q8QB87Eud7BMbkBg8">Report a bug or give feedback</a>
-                    </p>
-                </div>
-              </div>
+			</ol>
+
+			<div className="feedback">
+				<p> <a href="https://forms.gle/Q8QB87Eud7BMbkBg8">Report a bug or give feedback</a> </p>
+			</div>
+			<script src="https://apis.google.com/js/platform.js" async defer></script>
+                        <script>
+				function onSignIn(googleUser) {
+					let profile = googleUser.getBasicProfile();
+					console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+					console.log('Name: ' + profile.getName());
+					console.log('Image URL: ' + profile.getImageUrl());
+					console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+				}
+                        </script>
+		</div>
             );
         }
     }
