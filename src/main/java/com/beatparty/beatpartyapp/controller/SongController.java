@@ -63,21 +63,25 @@ public class SongController {
      *
      * @param token - The ID token of the user whose voted-on songs we need to fetch
      * @return list of songs voted on by the user associated with the given ID token if the token
-     *         is valid. Otherwise, returns null
+     *         is valid. Otherwise, throws ResponseStatusException (bad request)
      */
     @RequestMapping(method = RequestMethod.GET, value = "/getSongsVotedByUser/{token}")
-    public List<Song> getSongsVotedByUser(@PathVariable String token) {
+    public List<Integer> getSongsVotedByUser(@PathVariable String token) {
+        // Extract user id from token
+        GoogleUser googleUser;
         try {
-            GoogleUser googleUser = googleUserHelper.getGoogleUser(token);
-            List<UserVote> userVotes = userVotesDao.getSongsVotedByUser(googleUser.getId());
-            List<Song> songList = new ArrayList<>();
-            for (UserVote userVote : userVotes) {
-                songList.add(songDao.getSongById(userVote.getSongId()));
-            }
-            return songList;
+            googleUser = googleUserHelper.getGoogleUser(token);
         } catch (Exception e) {
-            return null;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid user");
         }
+
+        // Fetch list ids of voted songs
+        List<UserVote> userVotes = userVotesDao.getSongsVotedByUser(googleUser.getId());
+        List<Integer> songList = new ArrayList<>();
+        for (UserVote userVote : userVotes) {
+            songList.add(userVote.getSongId());
+        }
+        return songList;
     }
 
     /**
