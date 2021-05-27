@@ -2,10 +2,6 @@
   
 A CSE 403: Software Engineering (2021 Spring) group project  
   
-### Most Recent Assignment
----
-[Implementation and Documentation (Tuesday, 18th May, 2021)](#implementation-and-documentation)  
-  
 ### Table of Contents:
 ---
 1. [Ideas And Goals](#ideas-and-goals)  
