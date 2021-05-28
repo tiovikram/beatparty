@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {GoogleLogin} from 'react-google-login';
 
 import Song from './Song';
 import InputFormUploadSong from "./InputFormUploadSong";
@@ -7,8 +8,7 @@ import "./App.css";
 
 interface AppState{
     songList: [];
-
-
+    user: any;
     uploadButtonPressed: boolean;
 }
 
@@ -26,6 +26,7 @@ class App extends Component<{}, AppState>{
         super(props);
         this.state = {
             songList: [],
+            user: null,
             uploadButtonPressed: false,
         }
         this.getSongData();
@@ -80,7 +81,6 @@ class App extends Component<{}, AppState>{
     }
 
     getTopSongs = async () =>{
-        //alert("Top");
         let extendPath = 'http://13.87.246.41:8080/getSongs/12';
         try {
             let response = await fetch(extendPath);
@@ -97,7 +97,6 @@ class App extends Component<{}, AppState>{
                 songList: topSongs,
                 uploadButtonPressed: false,
             })
-            console.log(this.state.songList);
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
@@ -116,12 +115,8 @@ class App extends Component<{}, AppState>{
         });
     }
 
-    onSignIn = (googleUser: any) => {
-        var profile = googleUser.getBasicProfile();
-        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        console.log('Name: ' + profile.getName());
-        console.log('Image URL: ' + profile.getImageUrl());
-        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+    responseGoogle = (response: any) => {
+        console.log(response);
     }
 
     render() {
@@ -161,7 +156,6 @@ class App extends Component<{}, AppState>{
             console.log("Songs to Render:" + songsToRender);
             return (
 		<div className="App" >
-			<meta name="google-signin-client_id" content="135607733919-k99bm0ldihbmko0hkg4b3pfmp3dj6ue9.apps.googleusercontent.com"></meta>
 			<h1 style={{ marginLeft: '40.5rem' }} >
 				BeatParty!
 			</h1>
@@ -169,7 +163,13 @@ class App extends Component<{}, AppState>{
 				<button onClick={this.getShuffledSongs}>Shuffle</button>
 				<button onClick={this.getTopSongs}>See Top Songs</button>
 				<button onClick={this.uploadSong}>Upload a Song</button>
-				<div class="g-signin2" data-onsuccess="onSignIn"></div>
+				<GoogleLogin
+    					clientId="135607733919-k99bm0ldihbmko0hkg4b3pfmp3dj6ue9.apps.googleusercontent.com"
+					buttonText="Login with Google"
+					onSuccess={this.responseGoogle}
+					onFailure={this.responseGoogle}
+					cookiePolicy={'single_host_origin'}
+				/>
 			</div>
 			<ol style = {{}}>
 
@@ -185,15 +185,6 @@ class App extends Component<{}, AppState>{
 				<p> <a href="https://forms.gle/Q8QB87Eud7BMbkBg8">Report a bug or give feedback</a> </p>
 			</div>
 			<script src="https://apis.google.com/js/platform.js" async defer></script>
-                        <script>
-				function onSignIn(googleUser) {
-					let profile = googleUser.getBasicProfile();
-					console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-					console.log('Name: ' + profile.getName());
-					console.log('Image URL: ' + profile.getImageUrl());
-					console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-				}
-                        </script>
 		</div>
             );
         }
