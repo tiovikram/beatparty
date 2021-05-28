@@ -7,7 +7,7 @@ import InputFormUploadSong from "./InputFormUploadSong";
 import "./App.css";
 
 interface AppState{
-    songList: [];
+    songList: any;
     user: any;
     uploadButtonPressed: boolean;
 }
@@ -42,10 +42,17 @@ class App extends Component<{}, AppState>{
             }
             let allSongs = await response.json();
             console.log(allSongs);
+            let listOfSongs = this.createSongList(allSongs);
+            this.setState({
+                songList: listOfSongs,
+                uploadButtonPressed: false,
+            })
+            /*
             this.setState({
                 songList: allSongs,
                 uploadButtonPressed: false,
             })
+            */
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
@@ -70,10 +77,17 @@ class App extends Component<{}, AppState>{
                 songList: [],
                 uploadButtonPressed: false,
             })
+            let listOfSongs = this.createSongList(shuffleSongs);
+            this.setState({
+                songList: listOfSongs,
+                uploadButtonPressed: false,
+            })
+            /*
             this.setState({
                 songList: shuffleSongs,
                 uploadButtonPressed: false,
             })
+            */
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
@@ -93,14 +107,40 @@ class App extends Component<{}, AppState>{
                 songList: [],
                 uploadButtonPressed: false,
             })
+            let listOfSongs = this.createSongList(topSongs);
+            this.setState({
+                songList: listOfSongs,
+                uploadButtonPressed: false,
+            })
+            /*
             this.setState({
                 songList: topSongs,
                 uploadButtonPressed: false,
             })
+            */
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
         }
+    }
+
+    createSongList =  (songsToParse: any) => {
+        console.log(songsToParse);
+        const listOfSongs = [];
+        for (const currentSong of songsToParse){
+            var song = {
+                id: currentSong.id,
+                artist: currentSong.artistName,
+                date: currentSong.uploadDate,
+                name: currentSong.name,
+                upvotes: currentSong.votes,
+                url: currentSong.songLink,
+                isVoted: false,
+                user: this.state.user,
+            };
+            listOfSongs.push(song);
+        }
+        return listOfSongs;
     }
 
     uploadSong = () =>{
@@ -116,9 +156,11 @@ class App extends Component<{}, AppState>{
     }
 
     successResponseGoogle = (response: any) => {
+        alert("Signed in to Google successfully!");
         this.setState({
             user: response.tokenId,
         });
+        //this.getSongData();
 
         // TODO: Get list of already upvoted songs from the backend and merge
         // TODO: Loop through SongList and if the name and artist matches, update the isUpvoted.
@@ -127,6 +169,7 @@ class App extends Component<{}, AppState>{
         // ...
         // ...
     }
+
 
     failureResponseGoogle = (response: any) => {
         alert("Error: Google sign-in failed");
@@ -158,11 +201,12 @@ class App extends Component<{}, AppState>{
             const songsToRender = [];
             for (const currentSong of this.state.songList){
                 songsToRender.push(<Song   id={currentSong['id']}
-                                           artist={'by ' + currentSong['artistName']}
-                                           date={currentSong['uploadDate']}
+                                           artist={'by ' + currentSong['artist']}
+                                           date={currentSong['date']}
                                            name={currentSong['name']}
-                                           upvotes={currentSong['votes']}
-                                           url={currentSong['songLink']}
+                                           upvotes={currentSong['upvotes']}
+                                           url={currentSong['url']}
+                                           isVoted={currentSong['isVoted']}
                                            user={this.state.user}
                                    />);
 
@@ -205,3 +249,5 @@ class App extends Component<{}, AppState>{
     }
 }
 export default App;
+
+
