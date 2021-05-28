@@ -33,7 +33,8 @@ class App extends Component<{}, AppState>{
     }
 
     getSongData = async () => {
-        let extendPath = 'http://13.87.246.41:8080/getSongs/12';
+        //let extendPath = 'http://13.87.246.41:8080/getSongs/12';
+	let extendPath = 'http://localhost:8080/getSongs/12';
         try {
             let response = await fetch(extendPath);
             if (!response.ok) {
@@ -64,7 +65,9 @@ class App extends Component<{}, AppState>{
     }
 
     getShuffledSongs = async () =>{
-        let extendPath = 'http://13.87.246.41:8080/getShuffledSongs/12';
+        //let extendPath = 'http://13.87.246.41:8080/getShuffledSongs/12';
+	let extendPath = 'http://localhost:8080/getShuffledSongs/12';
+
         try {
             let response = await fetch(extendPath);
             if (!response.ok) {
@@ -82,12 +85,6 @@ class App extends Component<{}, AppState>{
                 songList: listOfSongs,
                 uploadButtonPressed: false,
             })
-            /*
-            this.setState({
-                songList: shuffleSongs,
-                uploadButtonPressed: false,
-            })
-            */
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
@@ -95,7 +92,9 @@ class App extends Component<{}, AppState>{
     }
 
     getTopSongs = async () =>{
-        let extendPath = 'http://13.87.246.41:8080/getSongs/12';
+        //let extendPath = 'http://13.87.246.41:8080/getSongs/12';
+	let extendPath = 'http://localhost:8080/getSongs/12';
+
         try {
             let response = await fetch(extendPath);
             if (!response.ok) {
