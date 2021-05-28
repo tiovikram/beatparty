@@ -80,9 +80,9 @@ class InputFormUploadSong extends Component<InputFormUploadSongProps, InputFormU
             alert("There was an error contacting the server.");
             console.log(e);
         }
-        alert("New Song Upload! You can now continue browsing music!");
-        //window.location.href = "https://beatparty.azurewebsites.net";
-	window.location.href = "https://localhost:3000";
+        alert("New Song Upload! You can now continue browsing music! You may have to login again.");
+        //window.location.href = "http://beatparty.azurewebsites.net";
+	window.location.href = "http://localhost:3000";
 
         } else {
             alert("URL is not a valid Spotify, Youtube or Soundcloud URL");
