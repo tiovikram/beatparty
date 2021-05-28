@@ -5,6 +5,7 @@ import "./Song.css"
 interface SongState {
     isVoted: boolean;
     upvotes: number;
+    user: any;
 }
 
 // TODO: Add props for isVoted, imageUrl
@@ -15,6 +16,8 @@ interface SongProps {
     name: string;
     upvotes: number;
     url: string;
+    isVoted: boolean;
+    user: any;
 }
 
 /*
@@ -29,41 +32,44 @@ class Song extends Component<SongProps, SongState> {
         super(props);
 
         this.state = {
-            isVoted: false,
-            upvotes: this.props.upvotes
+            isVoted: this.props.isVoted,
+            upvotes: this.props.upvotes,
+            user: this.props.user
         };
     }
 
     upvote = (isVoted: boolean, upvotes: number) => {
-        if (!isVoted) {
-            this.setState({
-                isVoted: true,
-                upvotes: upvotes + 1
-            });
-            try{
-                var requestToUpvote = new XMLHttpRequest();
-                requestToUpvote.open("POST", 'http://localhost:8080/vote/' + (this.props.id).toString() + '/' + (true).toString(), true);
-                requestToUpvote.setRequestHeader('Content-Type', 'application/json');
-                requestToUpvote.send();
-            }
-            catch (e){
-                alert("There was an error contacting the server.");
-                console.log(e);
-            }
-        } else {
-            this.setState({
-                isVoted: false,
-                upvotes: upvotes - 1
-            })
-            try{
-                var requestToDownvote = new XMLHttpRequest();
-                requestToDownvote.open("POST", 'http://localhost:8080/vote/' + (this.props.id).toString() + '/' + (false).toString(), true);
-                requestToDownvote.setRequestHeader('Content-Type', 'application/json');
-                requestToDownvote.send();
-            }
-            catch (e){
-                alert("There was an error contacting the server.");
-                console.log(e);
+        if (this.state.user !== null) {
+            if (!isVoted) {
+                this.setState({
+                    isVoted: true,
+                    upvotes: upvotes + 1
+                });
+                try{
+                    var requestToUpvote = new XMLHttpRequest();
+                    requestToUpvote.open("POST", 'http://localhost:8080/vote/' + (this.props.id).toString() + '/' + (true).toString(), true);
+                    requestToUpvote.setRequestHeader('Content-Type', 'application/json');
+                    requestToUpvote.send();
+                }
+                catch (e){
+                    alert("There was an error contacting the server.");
+                    console.log(e);
+                }
+            } else {
+                this.setState({
+                    isVoted: false,
+                    upvotes: upvotes - 1
+                })
+                try{
+                    var requestToDownvote = new XMLHttpRequest();
+                    requestToDownvote.open("POST", 'http://localhost:8080/vote/' + (this.props.id).toString() + '/' + (false).toString(), true);
+                    requestToDownvote.setRequestHeader('Content-Type', 'application/json');
+                    requestToDownvote.send();
+                }
+                catch (e){
+                    alert("There was an error contacting the server.");
+                    console.log(e);
+                }
             }
         }
     }
