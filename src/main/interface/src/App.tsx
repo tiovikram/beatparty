@@ -115,8 +115,21 @@ class App extends Component<{}, AppState>{
         });
     }
 
-    responseGoogle = (response: any) => {
-        console.log(response);
+    successResponseGoogle = (response: any) => {
+        this.setState({
+            user: response.tokenId,
+        });
+
+        // TODO: Get list of already upvoted songs from the backend and merge
+        // TODO: Loop through SongList and if the name and artist matches, update the isUpvoted.
+	// var song = new Song;
+        // song.id =  list.getElement(i).id
+        // ...
+        // ...
+    }
+
+    failureResponseGoogle = (response: any) => {
+        alert("Error: Google sign-in failed");
     }
 
     render() {
@@ -150,6 +163,7 @@ class App extends Component<{}, AppState>{
                                            name={currentSong['name']}
                                            upvotes={currentSong['votes']}
                                            url={currentSong['songLink']}
+                                           user={this.state.user}
                                    />);
 
             }
@@ -166,8 +180,8 @@ class App extends Component<{}, AppState>{
 				<GoogleLogin
     					clientId="135607733919-k99bm0ldihbmko0hkg4b3pfmp3dj6ue9.apps.googleusercontent.com"
 					buttonText="Login with Google"
-					onSuccess={this.responseGoogle}
-					onFailure={this.responseGoogle}
+					onSuccess={this.successResponseGoogle}
+					onFailure={this.failureResponseGoogle}
 					cookiePolicy={'single_host_origin'}
 				/>
 			</div>
