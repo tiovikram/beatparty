@@ -45,8 +45,9 @@ class Song extends Component<SongProps, SongState> {
                     isVoted: true,
                     upvotes: upvotes + 1
                 });
+                var vote;
                 try{
-                    var vote = {
+                    vote = {
                         userIdToken: this.props.user,
                         songId: this.props.id,
                         vote: true
@@ -55,7 +56,7 @@ class Song extends Component<SongProps, SongState> {
                     var requestToUpvote = new XMLHttpRequest();
                     requestToUpvote.open("POST", 'http://13.87.246.41:8080/vote/', true);
                     requestToUpvote.setRequestHeader('Content-Type', 'application/json');
-                    requestToUpvote.send(vote.toString());
+                    requestToUpvote.send(JSON.stringify(vote));
                 }
                 catch (e){
                     alert("There was an error contacting the server.");
@@ -67,7 +68,7 @@ class Song extends Component<SongProps, SongState> {
                     upvotes: upvotes - 1
                 })
                 try{
-                    var vote = {
+                    vote = {
                         userIdToken: this.props.user,
                         songId: this.props.id,
                         vote: false
@@ -76,7 +77,7 @@ class Song extends Component<SongProps, SongState> {
                     var requestToDownvote = new XMLHttpRequest();
                     requestToDownvote.open("POST", 'http://13.87.246.41:8080/vote/', true);
                     requestToDownvote.setRequestHeader('Content-Type', 'application/json');
-                    requestToDownvote.send(vote.toString());
+                    requestToDownvote.send(JSON.stringify(vote));
                 }
                 catch (e){
                     alert("There was an error contacting the server.");
@@ -107,7 +108,7 @@ class Song extends Component<SongProps, SongState> {
                     {this.state.upvotes}
                 </div>
             </div>
-            <a href={this.props.url} target={"_blank"} ref={"no referrer noopener"}>
+            <a href={this.props.url} target={"_blank"} rel={"noreferrer noopener"}>
                 <div className="song-info">
                     <div className="song-name">
                         {this.props.name}
