@@ -46,10 +46,16 @@ class Song extends Component<SongProps, SongState> {
                     upvotes: upvotes + 1
                 });
                 try{
+                    var vote = {
+                        userIdToken: this.props.user,
+                        songId: this.props.id,
+                        vote: true
+                    };
+
                     var requestToUpvote = new XMLHttpRequest();
-                    requestToUpvote.open("POST", 'http://localhost:8080/vote/' + (this.props.id).toString() + '/' + (true).toString(), true);
+                    requestToUpvote.open("POST", 'http://13.87.246.41:8080/vote/', true);
                     requestToUpvote.setRequestHeader('Content-Type', 'application/json');
-                    requestToUpvote.send();
+                    requestToUpvote.send(vote.toString());
                 }
                 catch (e){
                     alert("There was an error contacting the server.");
@@ -61,10 +67,16 @@ class Song extends Component<SongProps, SongState> {
                     upvotes: upvotes - 1
                 })
                 try{
+                    var vote = {
+                        userIdToken: this.props.user,
+                        songId: this.props.id,
+                        vote: false
+                    };
+
                     var requestToDownvote = new XMLHttpRequest();
-                    requestToDownvote.open("POST", 'http://localhost:8080/vote/' + (this.props.id).toString() + '/' + (false).toString(), true);
+                    requestToDownvote.open("POST", 'http://13.87.246.41:8080/vote/', true);
                     requestToDownvote.setRequestHeader('Content-Type', 'application/json');
-                    requestToDownvote.send();
+                    requestToDownvote.send(vote.toString());
                 }
                 catch (e){
                     alert("There was an error contacting the server.");
