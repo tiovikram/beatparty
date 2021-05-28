@@ -9,6 +9,7 @@ import "./App.css";
 interface AppState{
     songList: any;
     user: any;
+    upvotedSongIds: any;
     uploadButtonPressed: boolean;
 }
 
@@ -27,6 +28,7 @@ class App extends Component<{}, AppState>{
         this.state = {
             songList: [],
             user: null,
+            upvotedSongIds: [], 
             uploadButtonPressed: false,
         }
         this.getSongData();
@@ -77,6 +79,7 @@ class App extends Component<{}, AppState>{
                 songList: listOfSongs,
                 uploadButtonPressed: false,
             })
+            this.mergeUpvotedSongs(this.state.upvotedSongIds);
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
@@ -103,12 +106,7 @@ class App extends Component<{}, AppState>{
                 songList: listOfSongs,
                 uploadButtonPressed: false,
             })
-            /*
-            this.setState({
-                songList: topSongs,
-                uploadButtonPressed: false,
-            })
-            */
+            this.mergeUpvotedSongs(this.state.upvotedSongIds);
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
@@ -168,25 +166,32 @@ class App extends Component<{}, AppState>{
                 return;
             }
             let votedSongs = await response.json();
-
-            var updatedList: any = JSON.parse(JSON.stringify(this.state.songList));
-            for (var song of updatedList) {
-                if (votedSongs.includes(song.id)) {
-                    song.isVoted = true;
-                }
-            }
-
             this.setState({
-                songList: []
+                upvotedSongIds: votedSongs
             });
 
-            this.setState({
-                songList: updatedList
-            });
+            this.mergeUpvotedSongs(this.state.upvotedSongIds);
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
         }
+    }
+
+    mergeUpvotedSongs = (upvotedSongs: any) => {
+        var updatedList: any = JSON.parse(JSON.stringify(this.state.songList));
+        for (var song of updatedList) {
+            if (upvotedSongs.includes(song.id)) {
+                song.isVoted = true;
+            }
+        }
+        
+        this.setState({
+            songList: []
+        });
+        
+        this.setState({
+            songList: updatedList
+        });
     }
 
 
