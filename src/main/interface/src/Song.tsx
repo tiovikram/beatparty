@@ -5,7 +5,7 @@ import "./Song.css"
 interface SongState {
     isVoted: boolean;
     upvotes: number;
-    user: any;
+    //user: any;
 }
 
 // TODO: Add props for isVoted, imageUrl
@@ -34,12 +34,12 @@ class Song extends Component<SongProps, SongState> {
         this.state = {
             isVoted: this.props.isVoted,
             upvotes: this.props.upvotes,
-            user: this.props.user
+            //user: this.props.user,
         };
     }
 
     upvote = (isVoted: boolean, upvotes: number) => {
-        if (this.state.user !== null) {
+        if (this.props.user !== null) {
             if (!isVoted) {
                 this.setState({
                     isVoted: true,
