@@ -96,9 +96,6 @@ class Song extends Component<SongProps, SongState> {
            buttonGray = {filter: "grayscale(100%)"}
         }
 
-        console.log(this.props.id);
-        console.log(this.props.artist);
-        console.log(this.props.upvotes);
         return (
         <div className="song-container">
             <div className="upvote-section">

@@ -42,18 +42,11 @@ class App extends Component<{}, AppState>{
                 return;
             }
             let allSongs = await response.json();
-            console.log(allSongs);
             let listOfSongs = this.createSongList(allSongs);
             this.setState({
                 songList: listOfSongs,
                 uploadButtonPressed: false,
             })
-            /*
-            this.setState({
-                songList: allSongs,
-                uploadButtonPressed: false,
-            })
-            */
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
@@ -75,7 +68,6 @@ class App extends Component<{}, AppState>{
                 return;
             }
             let shuffleSongs = await response.json();
-            console.log(shuffleSongs);
             this.setState({
                 songList: [],
                 uploadButtonPressed: false,
@@ -124,7 +116,6 @@ class App extends Component<{}, AppState>{
     }
 
     createSongList =  (songsToParse: any) => {
-        console.log(songsToParse);
         const listOfSongs = [];
         for (const currentSong of songsToParse){
             var song = {
@@ -154,12 +145,11 @@ class App extends Component<{}, AppState>{
         });
     }
 
-    successResponseGoogle = (response: any) => {
+    successResponseGoogle = async (response: any) => {
         alert("Signed in to Google successfully!");
         this.setState({
             user: response.tokenId,
         });
-        //this.getSongData();
 
         // TODO: Get list of already upvoted songs from the backend and merge
         // TODO: Loop through SongList and if the name and artist matches, update the isUpvoted.
@@ -167,6 +157,36 @@ class App extends Component<{}, AppState>{
         // song.id =  list.getElement(i).id
         // ...
         // ...
+
+        //let extendPath = 'http://13.87.246.41:8080/getSongsVotedByUser/' + this.state.user.toString();
+        let extendPath = 'http://localhost:8080/getSongsVotedByUser/' + this.state.user.toString();
+
+        try {
+            let response = await fetch(extendPath);
+            if (!response.ok) {
+                alert("Could not receive data after login");
+                return;
+            }
+            let votedSongs = await response.json();
+
+            var updatedList: any = JSON.parse(JSON.stringify(this.state.songList));
+            for (var song of updatedList) {
+                if (votedSongs.includes(song.id)) {
+                    song.isVoted = true;
+                }
+            }
+
+            this.setState({
+                songList: []
+            });
+
+            this.setState({
+                songList: updatedList
+            });
+        } catch (e) {
+            alert("There was an error contacting the server.");
+            console.log(e);
+        }
     }
 
 
@@ -210,7 +230,6 @@ class App extends Component<{}, AppState>{
                                    />);
 
             }
-            console.log("Songs to Render:" + songsToRender);
             return (
 		<div className="App" >
 			<h1 style={{ marginLeft: '40.5rem' }} >
