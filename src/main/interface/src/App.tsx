@@ -79,6 +79,7 @@ class App extends Component<{}, AppState>{
                 songList: listOfSongs,
                 uploadButtonPressed: false,
             })
+            this.getUpvotedList();
             this.mergeUpvotedSongs(this.state.upvotedSongIds);
         } catch (e) {
             alert("There was an error contacting the server.");
@@ -106,6 +107,7 @@ class App extends Component<{}, AppState>{
                 songList: listOfSongs,
                 uploadButtonPressed: false,
             })
+            this.getUpvotedList();
             this.mergeUpvotedSongs(this.state.upvotedSongIds);
         } catch (e) {
             alert("There was an error contacting the server.");
@@ -156,6 +158,11 @@ class App extends Component<{}, AppState>{
         // ...
         // ...
 
+	this.getUpvotedList();
+	this.mergeUpvotedSongs(this.state.upvotedSongIds);
+    }
+
+    getUpvotedList = async () => {
         //let extendPath = 'http://13.87.246.41:8080/getSongsVotedByUser/' + this.state.user.toString();
         let extendPath = 'http://localhost:8080/getSongsVotedByUser/' + this.state.user.toString();
 
@@ -166,11 +173,13 @@ class App extends Component<{}, AppState>{
                 return;
             }
             let votedSongs = await response.json();
+            this.setState ({
+                upvotedSongIds: []
+            })
             this.setState({
                 upvotedSongIds: votedSongs
             });
 
-            this.mergeUpvotedSongs(this.state.upvotedSongIds);
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
