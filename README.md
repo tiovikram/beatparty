@@ -1,6 +1,9 @@
 ## Beat Party ![](https://travis-ci.com/v-subbiah/beatparty.svg?token=MWpStGKXXEjsTeLgMJyz&branch=master)
   
 A CSE 403: Software Engineering (2021 Spring) group project  
+---
+### Link to final project:  
+[BeatParty final project](http://beatparty.azurewebsites.net)
   
 ### Table of Contents:
 ---
