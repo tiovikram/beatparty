@@ -55,8 +55,8 @@ class Song extends Component<SongProps, SongState> {
 
                     console.log(vote);
                     var requestToUpvote = new XMLHttpRequest();
-                    //requestToUpvote.open("POST", 'http://13.87.246.41:8080/vote/', true);
-                    requestToUpvote.open("POST", 'http://localhost:8080/vote/', true);
+                    requestToUpvote.open("POST", 'http://13.87.246.41:8080/vote/', true);
+                    //requestToUpvote.open("POST", 'http://localhost:8080/vote/', true);
                     requestToUpvote.setRequestHeader('Content-Type', 'application/json');
                     requestToUpvote.send(JSON.stringify(vote));
                 }
@@ -77,8 +77,8 @@ class Song extends Component<SongProps, SongState> {
                     };
 
                     var requestToDownvote = new XMLHttpRequest();
-                    //requestToDownvote.open("POST", 'http://13.87.246.41:8080/vote/', true);
-                    requestToDownvote.open("POST", 'http://localhost:8080/vote/', true);
+                    requestToDownvote.open("POST", 'http://13.87.246.41:8080/vote/', true);
+                    //requestToDownvote.open("POST", 'http://localhost:8080/vote/', true);
                     requestToDownvote.setRequestHeader('Content-Type', 'application/json');
                     requestToDownvote.send(JSON.stringify(vote));
                 }
