@@ -246,13 +246,13 @@ class App extends Component<{}, AppState>{
             }
             return (
 		<div className="App" >
-			<h1 style={{ marginLeft: '40.5rem' }} >
+			<h1 id={"app-title"} >
 				BeatParty!
 			</h1>
-			<div style = {{ marginLeft: '36.5rem'}}>
-				<button onClick={this.getShuffledSongs}>Shuffle</button>
-				<button onClick={this.getTopSongs}>See Top Songs</button>
-				<button onClick={this.uploadSong}>Upload a Song</button>
+			<div id={"buttons"}>
+				<button id={"button"} onClick={this.getShuffledSongs}>Shuffle</button>
+				<button id={"button"} onClick={this.getTopSongs}>See Top Songs</button>
+				<button id={"button"} onClick={this.uploadSong}>Upload a Song</button>
 				<GoogleLogin
     					clientId="135607733919-k99bm0ldihbmko0hkg4b3pfmp3dj6ue9.apps.googleusercontent.com"
 					buttonText="Login with Google"

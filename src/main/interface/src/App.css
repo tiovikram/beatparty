@@ -11,3 +11,26 @@ body {
 .feedback {
     text-align: center;
 }
+
+#app-title {
+    text-align: center;
+    font-size: 50px;
+    font-family: 'encode_sans_normalbold', sans-serif;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+#buttons {
+    margin-left: 364px;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+}
+
+#button {
+    width: 172px;
+    height: 43px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
