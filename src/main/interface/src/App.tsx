@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {GoogleLogin} from 'react-google-login';
 
 import Song from './Song';
 import InputFormUploadSong from "./InputFormUploadSong";
@@ -6,9 +7,9 @@ import InputFormUploadSong from "./InputFormUploadSong";
 import "./App.css";
 
 interface AppState{
-    songList: [];
-
-
+    songList: any;
+    user: any;
+    upvotedSongIds: any;
     uploadButtonPressed: boolean;
 }
 
@@ -26,13 +27,16 @@ class App extends Component<{}, AppState>{
         super(props);
         this.state = {
             songList: [],
+            user: null,
+            upvotedSongIds: [], 
             uploadButtonPressed: false,
         }
         this.getSongData();
     }
 
     getSongData = async () => {
-        let extendPath = 'http://localhost:8080/getSongs/12';
+        //let extendPath = 'http://13.87.246.41:8080/getSongs/12';
+	let extendPath = 'http://localhost:8080/getSongs/12';
         try {
             let response = await fetch(extendPath);
             if (!response.ok) {
@@ -40,9 +44,9 @@ class App extends Component<{}, AppState>{
                 return;
             }
             let allSongs = await response.json();
-            console.log(allSongs);
+            let listOfSongs = this.createSongList(allSongs);
             this.setState({
-                songList: allSongs,
+                songList: listOfSongs,
                 uploadButtonPressed: false,
             })
         } catch (e) {
@@ -56,7 +60,9 @@ class App extends Component<{}, AppState>{
     }
 
     getShuffledSongs = async () =>{
-        let extendPath = 'http://localhost:8080/getShuffledSongs/12';
+        //let extendPath = 'http://13.87.246.41:8080/getShuffledSongs/12';
+	let extendPath = 'http://localhost:8080/getShuffledSongs/12';
+
         try {
             let response = await fetch(extendPath);
             if (!response.ok) {
@@ -64,15 +70,17 @@ class App extends Component<{}, AppState>{
                 return;
             }
             let shuffleSongs = await response.json();
-            console.log(shuffleSongs);
             this.setState({
                 songList: [],
                 uploadButtonPressed: false,
             })
+            let listOfSongs = this.createSongList(shuffleSongs);
             this.setState({
-                songList: shuffleSongs,
+                songList: listOfSongs,
                 uploadButtonPressed: false,
             })
+            this.getUpvotedList();
+            this.mergeUpvotedSongs(this.state.upvotedSongIds);
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
@@ -80,8 +88,9 @@ class App extends Component<{}, AppState>{
     }
 
     getTopSongs = async () =>{
-        //alert("Top");
-        let extendPath = 'http://localhost:8080/getSongs/12';
+        //let extendPath = 'http://13.87.246.41:8080/getSongs/12';
+	let extendPath = 'http://localhost:8080/getSongs/12';
+
         try {
             let response = await fetch(extendPath);
             if (!response.ok) {
@@ -93,15 +102,35 @@ class App extends Component<{}, AppState>{
                 songList: [],
                 uploadButtonPressed: false,
             })
+            let listOfSongs = this.createSongList(topSongs);
             this.setState({
-                songList: topSongs,
+                songList: listOfSongs,
                 uploadButtonPressed: false,
             })
-            console.log(this.state.songList);
+            this.getUpvotedList();
+            this.mergeUpvotedSongs(this.state.upvotedSongIds);
         } catch (e) {
             alert("There was an error contacting the server.");
             console.log(e);
         }
+    }
+
+    createSongList =  (songsToParse: any) => {
+        const listOfSongs = [];
+        for (const currentSong of songsToParse){
+            var song = {
+                id: currentSong.id,
+                artist: currentSong.artistName,
+                date: currentSong.uploadDate,
+                name: currentSong.name,
+                upvotes: currentSong.votes,
+                url: currentSong.songLink,
+                isVoted: false,
+                user: this.state.user,
+            };
+            listOfSongs.push(song);
+        }
+        return listOfSongs;
     }
 
     uploadSong = () =>{
@@ -114,6 +143,71 @@ class App extends Component<{}, AppState>{
         this.setState({
             uploadButtonPressed: false,
         });
+    }
+
+    successResponseGoogle = async (response: any) => {
+        alert("Signed in to Google successfully!");
+        this.setState({
+            user: response.tokenId,
+        });
+
+        // TODO: Get list of already upvoted songs from the backend and merge
+        // TODO: Loop through SongList and if the name and artist matches, update the isUpvoted.
+	// var song = new Song;
+        // song.id =  list.getElement(i).id
+        // ...
+        // ...
+
+	this.getUpvotedList();
+	this.mergeUpvotedSongs(this.state.upvotedSongIds);
+    }
+
+    getUpvotedList = async () => {
+        //let extendPath = 'http://13.87.246.41:8080/getSongsVotedByUser/' + this.state.user.toString();
+        if (this.state.user !== null){
+            let extendPath = 'http://localhost:8080/getSongsVotedByUser/' + this.state.user.toString();
+
+            try {
+                let response = await fetch(extendPath);
+                if (!response.ok) {
+                    alert("Could not receive data after login");
+                    return;
+                }
+                let votedSongs = await response.json();
+                this.setState ({
+                    upvotedSongIds: []
+                })
+                this.setState({
+                    upvotedSongIds: votedSongs
+                });
+
+            } catch (e) {
+                alert("There was an error contacting the server.");
+                console.log(e);
+            }
+        }
+    }
+
+    mergeUpvotedSongs = (upvotedSongs: any) => {
+        var updatedList: any = JSON.parse(JSON.stringify(this.state.songList));
+        for (var song of updatedList) {
+            if (upvotedSongs.includes(song.id)) {
+                song.isVoted = true;
+            }
+        }
+        
+        this.setState({
+            songList: []
+        });
+        
+        this.setState({
+            songList: updatedList
+        });
+    }
+
+
+    failureResponseGoogle = (response: any) => {
+        alert("Error: Google sign-in failed");
     }
 
     render() {
@@ -142,42 +236,52 @@ class App extends Component<{}, AppState>{
             const songsToRender = [];
             for (const currentSong of this.state.songList){
                 songsToRender.push(<Song   id={currentSong['id']}
-                                           artist={'by ' + currentSong['artistName']}
-                                           date={currentSong['uploadDate']}
+                                           artist={'by ' + currentSong['artist']}
+                                           date={currentSong['date']}
                                            name={currentSong['name']}
-                                           upvotes={currentSong['votes']}
-                                           url={currentSong['songLink']}
+                                           upvotes={currentSong['upvotes']}
+                                           url={currentSong['url']}
+                                           isVoted={currentSong['isVoted']}
+                                           user={this.state.user}
                                    />);
 
             }
-            console.log("Songs to Render:" + songsToRender);
             return (
-              <div className="App" >
-                  <h1 style={{ marginLeft: '40.5rem' }} >
-                  BeatParty!
-                  </h1>
-                  <div style = {{ marginLeft: '36.5rem'}}>
-                      <button onClick={this.getShuffledSongs}>Shuffle</button>
-                      <button onClick={this.getTopSongs}>See Top Songs</button>
-                      <button onClick={this.uploadSong}>Upload a Song</button>
-                  </div>
-                    <ol style = {{}}>
+		<div className="App" >
+			<h1 id={"app-title"} >
+				BeatParty!
+			</h1>
+			<div id={"buttons"}>
+				<button id={"button"} onClick={this.getShuffledSongs}>Shuffle</button>
+				<button id={"button"} onClick={this.getTopSongs}>See Top Songs</button>
+				<button id={"button"} onClick={this.uploadSong}>Upload a Song</button>
+				<GoogleLogin
+    					clientId="135607733919-k99bm0ldihbmko0hkg4b3pfmp3dj6ue9.apps.googleusercontent.com"
+					buttonText="Login with Google"
+					onSuccess={this.successResponseGoogle}
+					onFailure={this.failureResponseGoogle}
+					cookiePolicy={'single_host_origin'}
+				/>
+			</div>
+			<ol style = {{}}>
 
-                    {songsToRender.map(song => (
-                        <li className="song-list">
-                          {song}
-                        </li>
-                      ))}
+				{songsToRender.map(song => (
+				<li className="song-list">
+					{song}
+				</li>
+				))}
 
-                    </ol>
-                <div className="feedback">
-                    <p>
-                        <a href="https://forms.gle/Q8QB87Eud7BMbkBg8">Report a bug or give feedback</a>
-                    </p>
-                </div>
-              </div>
+			</ol>
+
+			<div className="feedback">
+				<p> <a href="https://forms.gle/Q8QB87Eud7BMbkBg8">Report a bug or give feedback</a> </p>
+			</div>
+			<script src="https://apis.google.com/js/platform.js" async defer></script>
+		</div>
             );
         }
     }
 }
 export default App;
+
+

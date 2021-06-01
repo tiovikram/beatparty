@@ -1,7 +1,14 @@
 package com.beatparty.beatpartyapp.controller;
 
 import com.beatparty.beatpartyapp.dao.SongDao;
+import com.beatparty.beatpartyapp.dao.UserVotesDao;
+import com.beatparty.beatpartyapp.entity.GoogleUser;
 import com.beatparty.beatpartyapp.entity.Song;
+import com.beatparty.beatpartyapp.entity.UserVote;
+import com.beatparty.beatpartyapp.entity.UserVoteId;
+import com.beatparty.beatpartyapp.entity.Vote;
+import com.beatparty.beatpartyapp.util.GoogleUserHelper;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,15 +23,21 @@ import org.springframework.web.server.ResponseStatusException;
 /**
  * SongController maps http endpoints to their corresponding backend API calls.
  */
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class SongController {
 
     @Autowired
     SongDao songDao;
 
+    @Autowired
+    UserVotesDao userVotesDao;
+
+    @Autowired
+    GoogleUserHelper googleUserHelper;
+
     /**
-     * API to fetch the top 'count' number of songs. May return fewer that 'count' songs.
+     * API to fetch the top 'count' number of songs. May return fewer than 'count' songs.
      *
      * @param count - The number of songs to fetch
      * @return list of songs in descending order by number of votes
@@ -35,10 +48,42 @@ public class SongController {
         return songDao.getSongs(count);
     }
 
+    /**
+     * API to fetch the a random variation of 'count' songs. May return fewer than 'count' songs.
+     *
+     * @param count - The number of random songs to fetch
+     * @return list of random songs
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/getShuffledSongs/{count}")
     public List<Song> getShuffledSongs(@PathVariable int count) {
         checkCount(count);
         return songDao.getShuffledSongs(count);
+    }
+
+    /**
+     * API to fetch all the Songs that have been voted on by a user with the given ID token.
+     *
+     * @param token - The ID token of the user whose voted-on songs we need to fetch
+     * @return list of songs voted on by the user associated with the given ID token if the token
+     *         is valid. Otherwise, throws ResponseStatusException (bad request)
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/getSongsVotedByUser/{token}")
+    public List<Integer> getSongsVotedByUser(@PathVariable String token) {
+        // Extract user id from token
+        GoogleUser googleUser;
+        try {
+            googleUser = googleUserHelper.getGoogleUser(token);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid user");
+        }
+
+        // Fetch list ids of voted songs
+        List<UserVote> userVotes = userVotesDao.getSongsVotedByUser(googleUser.getId());
+        List<Integer> songList = new ArrayList<>();
+        for (UserVote userVote : userVotes) {
+            songList.add(userVote.getSongId());
+        }
+        return songList;
     }
 
     /**
@@ -56,25 +101,51 @@ public class SongController {
     /**
      * API to up-vote or down-vote a particular song.
      *
-     * @param id - the id of the song to perform the vote on
-     * @param vote - A boolean where True represents and up-vote and False represents a down-vote
-     * @throws ResponseStatusException (bad request) if id < 1
+     * @param vote - the vote to perform
+     * @throws ResponseStatusException (bad request) if song id < 1
      * @return "Vote successful" when vote is successful, "Vote unsuccessful" otherwise
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/vote/{id}/{vote}")
-    public String vote(@PathVariable int id, @PathVariable boolean vote) {
-        checkId(id);
+    @RequestMapping(method = RequestMethod.POST, value = "/vote")
+    public String vote(@RequestBody Vote vote) {
+        // Check id is valid
+        int songId = vote.getSongId();
+        checkId(vote.getSongId());
+
+        // Extract user Id
+        String userId;
+        try {
+            userId = googleUserHelper.getGoogleUser(vote.getUserIdToken()).getId();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication failed");
+        }
+        UserVoteId userVoteId = new UserVoteId(userId, songId);
 
         try {
-            Song s = songDao.getOne(id);
+            // Check if user has already voted for the song
+            boolean voted = userVotesDao.existsById(userVoteId);
+
+            Song s = songDao.getOne(songId);
             String response;
-            if (vote) {
-                s.upvote();
-                response = "Upvote successful";
+            if (vote.getVote()) {
+                if (!voted) {
+                    // Record new vote
+                    userVotesDao.save(new UserVote(userId, songId));
+                    s.upvote();
+                    response = "Upvote successful";
+                } else {
+                    response = "Already upvoted";
+                }
             } else {
-                s.downvote();
-                response = "Downvote successful";
+                if (voted) {
+                    // Undo upvote
+                    userVotesDao.deleteById(userVoteId);
+                    s.downvote();
+                    response = "Downvote successful";
+                } else {
+                    response = "User has not upvoted";
+                }
             }
+
             songDao.saveAndFlush(s);
             return response;
         } catch (Exception e) {

@@ -18,6 +18,11 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client</artifactId>
+			<version>1.31.2</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
@@ -83,7 +88,44 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>com.microsoft.azure</groupId>
+				<artifactId>azure-webapp-maven-plugin</artifactId>
+				<version>1.12.0</version>
+				<configuration>
+					<schemaVersion>V2</schemaVersion>
+					<resourceGroup>beatpartyapp-1621126371986-rg</resourceGroup>
+					<appName>beatparty</appName>
+					<pricingTier>B1</pricingTier>
+					<region>westus</region>
+					<subscriptionId>82fd813b-f607-4360-8b40-89c229db8e96</subscriptionId>
+					<runtime>
+						<os>linux</os>
+						<javaVersion>Java 11</javaVersion>
+						<webContainer>Java SE</webContainer>
+					</runtime>
+					<appSettings>
+						<property>
+							<name>JAVA_OPTS</name>
+							<value>-Dserver.port=80</value>
+						</property>
+					</appSettings>
+					<deployment>
+						<resources>
+							<resource>
+								<directory>${project.basedir}/target</directory>
+								<includes>
+									<include>*.jar</include>
+								</includes>
+							</resource>
+						</resources>
+					</deployment>
+					<deploymentSlot>
+						<name>beatparty-slot</name>
+						<configurationSource></configurationSource>
+					</deploymentSlot>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>
