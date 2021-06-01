@@ -164,25 +164,27 @@ class App extends Component<{}, AppState>{
 
     getUpvotedList = async () => {
         //let extendPath = 'http://13.87.246.41:8080/getSongsVotedByUser/' + this.state.user.toString();
-        let extendPath = 'http://localhost:8080/getSongsVotedByUser/' + this.state.user.toString();
+        if (this.state.user !== null){
+            let extendPath = 'http://localhost:8080/getSongsVotedByUser/' + this.state.user.toString();
 
-        try {
-            let response = await fetch(extendPath);
-            if (!response.ok) {
-                alert("Could not receive data after login");
-                return;
+            try {
+                let response = await fetch(extendPath);
+                if (!response.ok) {
+                    alert("Could not receive data after login");
+                    return;
+                }
+                let votedSongs = await response.json();
+                this.setState ({
+                    upvotedSongIds: []
+                })
+                this.setState({
+                    upvotedSongIds: votedSongs
+                });
+
+            } catch (e) {
+                alert("There was an error contacting the server.");
+                console.log(e);
             }
-            let votedSongs = await response.json();
-            this.setState ({
-                upvotedSongIds: []
-            })
-            this.setState({
-                upvotedSongIds: votedSongs
-            });
-
-        } catch (e) {
-            alert("There was an error contacting the server.");
-            console.log(e);
         }
     }
 
